@@ -3,7 +3,12 @@ package com.safety.testone.testoneofsafetynet.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safety.testone.testoneofsafetynet.model.FireStation;
@@ -19,33 +24,54 @@ import com.safety.testone.testoneofsafetynet.model.generalDAO;
 public class SafetyController {
 
 	@Autowired
-	PersonDAO personDAO;
+	PersonService personService;
 
 	@Autowired
-	FireStationDAO fireStationDAO;
+	FireStationService fireStationService;
 
 	@Autowired
-	MedicalRecordDAO medicalRecordDAO;
+	MedicalRecordService medicalRecordService;
 
 	@Autowired
-	generalDAO gen;
+	GeneralService gen;
 
 	@GetMapping(value = "/person")
 	public Iterable<Person> printAllPeople() {
 
-		return personDAO.getAllPersons();
+		return personService.getAllPersons();
+	}
+	
+	
+
+	@PostMapping(value = "/person")
+	public Person saveANewPersonFromPost(@RequestBody Person person) {
+
+		return personService.saveANewPerson(person);
+	}
+
+	@DeleteMapping(value = "/person/{firstName}/{thelastName}")
+	public Person updateAPerson(@PathVariable("firstName") String firstName, @PathVariable("thelastName") String thelastName) {
+
+		return personService.deleteAPerson(firstName, thelastName);
+
+	}
+
+	@GetMapping(value = "/person/{name}")
+	public List<Person> getAFamilly(@PathVariable String name) {
+
+		return personService.getThefamillyStuff(name);
 	}
 
 	@GetMapping(value = "/firestation")
 	public Iterable<FireStation> printAllFireStations() {
 
-		return fireStationDAO.getAllFireStations();
+		return fireStationService.getAllFireStations();
 	}
 
 	@GetMapping(value = "/medicalrecords")
 	public Iterable<Medicalrecords> printAllMedicalrecords() {
 
-		return medicalRecordDAO.getAllMedicalRecords();
+		return medicalRecordService.getAllMedicalRecords();
 	}
 
 	@GetMapping(value = "/Test")
