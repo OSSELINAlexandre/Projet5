@@ -4,7 +4,7 @@ public class Person {
 
 	private String firstName;
 	private String lastName;
-	private String adress;
+	private String address;
 	private String city;
 	private String zip;
 	private String phone;
@@ -30,12 +30,12 @@ public class Person {
 		this.lastName = lastName;
 	}
 
-	public String getAdress() {
-		return adress;
+	public String getAddress() {
+		return address;
 	}
 
-	public void setAdress(String adress) {
-		this.adress = adress;
+	public void setAddress(String adress) {
+		this.address = adress;
 	}
 
 	public String getCity() {

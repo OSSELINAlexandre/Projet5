@@ -6,18 +6,18 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class TestoneofsafetynetApplication implements CommandLineRunner{
+public class TestoneofsafetynetApplication implements CommandLineRunner {
 
 	@Autowired
 	CustomProperties cp;
-	
+
 	public static void main(String[] args) {
 		SpringApplication.run(TestoneofsafetynetApplication.class, args);
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
-		System.out.println(cp.getApiUrl());
+		System.out.println(cp.getFileLoc());
 	}
 
 }

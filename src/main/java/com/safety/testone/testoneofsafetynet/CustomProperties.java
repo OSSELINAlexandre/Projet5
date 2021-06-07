@@ -7,14 +7,17 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "com.safety.testone.testoneofsafetynet")
 public class CustomProperties {
 
-	private String apiUrl;
+	private String fileLoc;
 
-	public String getApiUrl() {
-		return apiUrl;
+	public String getFileLoc() {
+		return fileLoc;
 	}
 
-	public void setApiUrl(String apiUrl) {
-		this.apiUrl = apiUrl;
+	public void setFileLoc(String fileLoc) {
+		this.fileLoc = fileLoc;
 	}
+
+
+	
 
 }
