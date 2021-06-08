@@ -1,23 +1,23 @@
-package com.safety.testone.testoneofsafetynet.controller;
+package com.safety.testone.testoneofsafetynet.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.safety.testone.testoneofsafetynet.model.General;
-import com.safety.testone.testoneofsafetynet.model.generalDAO;
+import com.safety.testone.testoneofsafetynet.repository.GeneralData;
+import com.safety.testone.testoneofsafetynet.repository.generalDataDAO;
 
 @Service
 public class GeneralService {
 
 	@Autowired
-	generalDAO gen;
+	generalDataDAO gen;
 	
 	
 	public GeneralService() {
 		super();
 	}
 
-	public General loadDataFromFile() {
+	public GeneralData loadDataFromFile() {
 		// TODO Auto-generated method stub
 		return gen.loadDataFromFile();
 	}

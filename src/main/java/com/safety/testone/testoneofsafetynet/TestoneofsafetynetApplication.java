@@ -5,11 +5,19 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.safety.testone.testoneofsafetynet.repository.GeneralData;
+
 @SpringBootApplication
 public class TestoneofsafetynetApplication implements CommandLineRunner {
 
 	@Autowired
 	CustomProperties cp;
+
+	@Autowired
+	GeneralData generalData;
+
+	@Autowired
+	com.safety.testone.testoneofsafetynet.repository.generalDataDAO generalDataDAO;
 
 	public static void main(String[] args) {
 		SpringApplication.run(TestoneofsafetynetApplication.class, args);
@@ -17,7 +25,7 @@ public class TestoneofsafetynetApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		System.out.println(cp.getFileLoc());
+		generalData = generalDataDAO.loadDataFromFile();
 	}
 
 }

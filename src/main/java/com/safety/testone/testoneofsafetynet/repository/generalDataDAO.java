@@ -1,4 +1,4 @@
-package com.safety.testone.testoneofsafetynet.model;
+package com.safety.testone.testoneofsafetynet.repository;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,22 +19,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safety.testone.testoneofsafetynet.CustomProperties;
 
 @Component
-public class generalDAO {
+public class generalDataDAO {
 
 	@Autowired
 	CustomProperties customProperties;
 
 
 
-	public generalDAO() {
+	public generalDataDAO() {
 	}
 
-	public General loadDataFromFile() {
+	public GeneralData loadDataFromFile() {
 
-		General gen = new General();
+		GeneralData gen = new GeneralData();
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
-			gen = objectMapper.readValue(new File(customProperties.getFileLoc()), General.class);
+			gen = objectMapper.readValue(new File(customProperties.getFileLoc()), GeneralData.class);
 		} catch (IOException e) {
 			System.out.println("Error in the loading of the file");
 			e.printStackTrace();

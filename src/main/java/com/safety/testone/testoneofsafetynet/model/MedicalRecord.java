@@ -2,7 +2,7 @@ package com.safety.testone.testoneofsafetynet.model;
 
 import java.util.List;
 
-public class Medicalrecords {
+public class MedicalRecord {
 
 	private String firstName;
 	private String lastName;
@@ -14,11 +14,11 @@ public class Medicalrecords {
 	
 	
 	
-	public Medicalrecords() {
+	public MedicalRecord() {
 		super();
 	}
 
-	public Medicalrecords(String firstName, String lastName, String birthdate, List<String> medications,
+	public MedicalRecord(String firstName, String lastName, String birthdate, List<String> medications,
 			List<String> allergies) {
 		super();
 		this.firstName = firstName;
