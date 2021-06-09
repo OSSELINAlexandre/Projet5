@@ -1,5 +1,8 @@
 package com.safety.testone.testoneofsafetynet.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +15,6 @@ public class FireStationService {
 
 	@Autowired
 	FireStationDAO fireStationDAO;
-	
-
-	
 
 	public FireStationService() {
 		super();
@@ -38,6 +38,21 @@ public class FireStationService {
 	public FireStation updateAStation(String address, String newId) {
 		// TODO Auto-generated method stub
 		return fireStationDAO.updateTheStation(address, newId);
+	}
+
+	public List<FireStation> selectSomeFireStation(String stationNumber) {
+
+		Iterable<FireStation> wholeThing = getAllFireStations();
+		List<FireStation> resultThing = new ArrayList<FireStation>();
+		for (FireStation fs : wholeThing) {
+
+			if (fs.getStation().equals(stationNumber)) {
+				resultThing.add(fs);
+			}
+
+		}
+
+		return resultThing;
 	}
 
 }
