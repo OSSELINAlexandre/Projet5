@@ -11,9 +11,6 @@ public class MedicalRecord {
 	private List<String> allergies;
 
 	
-	
-	
-	
 	public MedicalRecord() {
 		super();
 	}

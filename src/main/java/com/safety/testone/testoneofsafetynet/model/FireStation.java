@@ -5,6 +5,16 @@ public class FireStation {
 	private String address;
 	private String station;
 
+	public FireStation(String address, String station) {
+		super();
+		this.address = address;
+		this.station = station;
+	}
+
+	public FireStation() {
+		super();
+	}
+
 	public String getAddress() {
 		return address;
 	}

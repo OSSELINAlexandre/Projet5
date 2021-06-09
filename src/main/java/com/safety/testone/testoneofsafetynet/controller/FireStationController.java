@@ -23,12 +23,12 @@ public class FireStationController {
 	FireStationService fireStationService;
 
 	@PostMapping(value = "/firestation")
-	public FireStation saveAPerson(@RequestBody FireStation caserne) {
+	public FireStation saveAFireStation(@RequestBody FireStation caserne) {
 		return fireStationService.saveANewStation(caserne);
 	}
 
 	@DeleteMapping(value = "/firestation/{address}")
-	public FireStation createAFireStation(@PathVariable("address") String address) {
+	public FireStation deleteANewStation(@PathVariable("address") String address) {
 
 		return fireStationService.deleteANewStation(address);
 
