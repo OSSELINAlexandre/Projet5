@@ -30,7 +30,7 @@ public class PersonController {
 	}
 
 	@DeleteMapping(value = "/person/{firstName}/{thelastName}")
-	public Person createAPerson(@PathVariable("firstName") String firstName, @PathVariable("thelastName") String thelastName) {
+	public Person deleteAPerson(@PathVariable("firstName") String firstName, @PathVariable("thelastName") String thelastName) {
 
 		return personService.deleteAPerson(firstName, thelastName);
 

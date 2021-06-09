@@ -39,7 +39,7 @@ public class URLService {
 		super();
 	}
 
-	public Iterable<childAlertDTO> getListOfChildBasedOnAddress(String adress) {
+	public List<childAlertDTO> getListOfChildBasedOnAddress(String adress) {
 		List<Person> livingAtThisAdress = new ArrayList<Person>();
 		List<childAlertDTO> livingAtThisAdressUnder18 = new ArrayList<childAlertDTO>();
 		for (Person p : personDAO.getAllPersons()) {
@@ -69,7 +69,7 @@ public class URLService {
 		return livingAtThisAdressUnder18;
 	}
 
-	public Iterable<phoneAlertDTO> getListOfPhoneNumberOfPeopleLivingCloseToTheFireStation(String firestation_number) {
+	public List<phoneAlertDTO> getListOfPhoneNumberOfPeopleLivingCloseToTheFireStation(String firestation_number) {
 
 		List<String> adressOfFireStation = new ArrayList<>();
 		List<phoneAlertDTO> listOfPhoneNumber = new ArrayList<phoneAlertDTO>();
@@ -99,7 +99,7 @@ public class URLService {
 		return listOfPhoneNumber;
 	}
 
-	public Iterable<fireDTO> getListOfInhabitantAndPhoneNumberOfFireStationCloseBy(String address) {
+	public List<fireDTO> getListOfInhabitantAndPhoneNumberOfFireStationCloseBy(String address) {
 
 		List<fireDTO> results = new ArrayList<fireDTO>();
 
@@ -132,7 +132,7 @@ public class URLService {
 		return results;
 	}
 
-	public Iterable<floodDTO> getListOfAllAddressProtectedByTheFireStation(List<String> IDStation) {
+	public List<floodDTO> getListOfAllAddressProtectedByTheFireStation(List<String> IDStation) {
 
 		List<String> adressDeservedByIDStations = new ArrayList<>();
 		List<floodDTO> results = new ArrayList<>();
@@ -174,7 +174,7 @@ public class URLService {
 		return results;
 	}
 
-	public Iterable<personInfoDTO> getMedicalInformationOfPeople(String firstName, String lastName) {
+	public List<personInfoDTO> getMedicalInformationOfPeople(String firstName, String lastName) {
 
 		List<personInfoDTO> result = new ArrayList<>();
 		int indexSwitcher = 0;
@@ -220,7 +220,7 @@ public class URLService {
 		return result;
 	}
 
-	public Iterable<communityEmailDTO> getAllEmailFromAllInhabitantOfCity(String city) {
+	public List<communityEmailDTO> getAllEmailFromAllInhabitantOfCity(String city) {
 
 		ArrayList<communityEmailDTO> emailsOfCityInhabitants = new ArrayList<>();
 		Boolean mailIsExisting = false;
