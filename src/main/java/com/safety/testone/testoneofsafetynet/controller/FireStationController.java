@@ -28,7 +28,7 @@ public class FireStationController {
 	}
 
 	@DeleteMapping(value = "/firestation/{address}")
-	public FireStation deleteANewStation(@PathVariable("address") String address) {
+	public Boolean deleteANewStation(@PathVariable("address") String address) {
 
 		return fireStationService.deleteANewStation(address);
 

@@ -5,7 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.safety.testone.testoneofsafetynet.repository.GeneralData;
+import com.safety.testone.testoneofsafetynet.repository.GeneralDataRepository;
 
 @SpringBootApplication
 public class TestoneofsafetynetApplication implements CommandLineRunner {
@@ -14,10 +14,10 @@ public class TestoneofsafetynetApplication implements CommandLineRunner {
 	CustomProperties cp;
 
 	@Autowired
-	GeneralData generalData;
+	GeneralDataRepository generalDataRepository;
 
 	@Autowired
-	com.safety.testone.testoneofsafetynet.repository.generalDataDAO generalDataDAO;
+	com.safety.testone.testoneofsafetynet.repository.DAOFactory DAOFactory;
 
 	public static void main(String[] args) {
 		SpringApplication.run(TestoneofsafetynetApplication.class, args);
@@ -25,7 +25,7 @@ public class TestoneofsafetynetApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		generalData = generalDataDAO.loadDataFromFile();
+		generalDataRepository = DAOFactory.loadDataFromFile();
 	}
 
 }

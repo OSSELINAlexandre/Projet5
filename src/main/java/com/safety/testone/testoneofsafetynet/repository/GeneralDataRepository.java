@@ -8,21 +8,24 @@ import com.safety.testone.testoneofsafetynet.model.FireStation;
 import com.safety.testone.testoneofsafetynet.model.MedicalRecord;
 import com.safety.testone.testoneofsafetynet.model.Person;
 
+
+
 @Component
-public class GeneralData {
+public class GeneralDataRepository {
 
 	private List<Person> persons;
 	private List<FireStation> firestations;
 	private List<MedicalRecord> medicalRecord;
 
-	public GeneralData(List<Person> persons, List<FireStation> firestations, List<MedicalRecord> medicalRecord) {
+	public GeneralDataRepository(List<Person> persons, List<FireStation> firestations,
+			List<MedicalRecord> medicalRecord) {
 		super();
 		this.persons = persons;
 		this.firestations = firestations;
 		this.medicalRecord = medicalRecord;
 	}
 
-	public GeneralData() {
+	public GeneralDataRepository() {
 		super();
 	}
 

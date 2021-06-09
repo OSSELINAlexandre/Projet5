@@ -3,21 +3,21 @@ package com.safety.testone.testoneofsafetynet.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.safety.testone.testoneofsafetynet.repository.GeneralData;
-import com.safety.testone.testoneofsafetynet.repository.generalDataDAO;
+import com.safety.testone.testoneofsafetynet.repository.GeneralDataRepository;
+import com.safety.testone.testoneofsafetynet.repository.DAOFactory;
 
 @Service
 public class GeneralService {
 
 	@Autowired
-	generalDataDAO gen;
+	DAOFactory gen;
 	
 	
 	public GeneralService() {
 		super();
 	}
 
-	public GeneralData loadDataFromFile() {
+	public GeneralDataRepository loadDataFromFile() {
 		// TODO Auto-generated method stub
 		return gen.loadDataFromFile();
 	}

@@ -6,14 +6,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.safety.testone.testoneofsafetynet.DAO.PersonDAO;
 import com.safety.testone.testoneofsafetynet.model.Person;
+import com.safety.testone.testoneofsafetynet.repository.PersonRepository;
 
 @Service
 public class PersonService {
 
 	@Autowired
-	PersonDAO personDAO;
+	PersonRepository personRepository;
 
 	public PersonService() {
 		super();
@@ -21,22 +21,22 @@ public class PersonService {
 
 	public Iterable<Person> getAllPersons() {
 
-		return personDAO.getAllPersons();
+		return personRepository.getAllPersons();
 	}
 
 	public Person saveANewPerson(Person person) {
 
-		return personDAO.saveAPerson(person);
+		return personRepository.saveAPerson(person);
 	}
 
 	public Person deleteAPerson(String firstName, String lastName) {
 
-		return personDAO.deleteAPerson(firstName, lastName);
+		return personRepository.deleteAPerson(firstName, lastName);
 	}
 
 	public Person updateAPerson(Person p) {
 
-		return personDAO.updateAPerson(p);
+		return personRepository.updateAPerson(p);
 	}
 
 }

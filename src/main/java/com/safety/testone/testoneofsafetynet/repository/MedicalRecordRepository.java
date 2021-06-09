@@ -1,4 +1,4 @@
-package com.safety.testone.testoneofsafetynet.DAO;
+package com.safety.testone.testoneofsafetynet.repository;
 
 import java.util.List;
 
@@ -7,19 +7,17 @@ import org.springframework.stereotype.Component;
 
 import com.safety.testone.testoneofsafetynet.model.MedicalRecord;
 import com.safety.testone.testoneofsafetynet.model.Person;
-import com.safety.testone.testoneofsafetynet.repository.GeneralData;
-import com.safety.testone.testoneofsafetynet.repository.generalDataDAO;
 
 @Component
-public class MedicalRecordDAO {
+public class MedicalRecordRepository {
 
 	@Autowired
-	private generalDataDAO generalDAO;
+	private DAOFactory generalDAO;
 	
-	private GeneralData gen;
+	private GeneralDataRepository gen;
 	private List<MedicalRecord> medicalRecordList;
 
-	public MedicalRecordDAO() {
+	public MedicalRecordRepository() {
 		super();
 	}
 

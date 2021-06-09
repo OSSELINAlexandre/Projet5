@@ -11,9 +11,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.safety.testone.testoneofsafetynet.DAO.FireStationDAO;
-import com.safety.testone.testoneofsafetynet.DAO.MedicalRecordDAO;
-import com.safety.testone.testoneofsafetynet.DAO.PersonDAO;
 import com.safety.testone.testoneofsafetynet.DTO.childAlertDTO;
 import com.safety.testone.testoneofsafetynet.DTO.communityEmailDTO;
 import com.safety.testone.testoneofsafetynet.DTO.fireDTO;
@@ -23,17 +20,20 @@ import com.safety.testone.testoneofsafetynet.DTO.phoneAlertDTO;
 import com.safety.testone.testoneofsafetynet.model.FireStation;
 import com.safety.testone.testoneofsafetynet.model.MedicalRecord;
 import com.safety.testone.testoneofsafetynet.model.Person;
+import com.safety.testone.testoneofsafetynet.repository.FireStationRepository;
+import com.safety.testone.testoneofsafetynet.repository.MedicalRecordRepository;
+import com.safety.testone.testoneofsafetynet.repository.PersonRepository;
 
 @Service
 public class URLService {
 	@Autowired
-	PersonDAO personDAO;
+	PersonRepository personRepository;
 
 	@Autowired
-	FireStationDAO fireStationDAO;
+	FireStationRepository fireStationRepository;
 
 	@Autowired
-	MedicalRecordDAO medicalRecordDAO;
+	MedicalRecordRepository medicalRecordRepository;
 
 	public URLService() {
 		super();
@@ -42,13 +42,13 @@ public class URLService {
 	public List<childAlertDTO> getListOfChildBasedOnAddress(String adress) {
 		List<Person> livingAtThisAdress = new ArrayList<Person>();
 		List<childAlertDTO> livingAtThisAdressUnder18 = new ArrayList<childAlertDTO>();
-		for (Person p : personDAO.getAllPersons()) {
+		for (Person p : personRepository.getAllPersons()) {
 			if (p.getAddress().equals(adress)) {
 				livingAtThisAdress.add(p);
 			}
 		}
 
-		for (MedicalRecord med : medicalRecordDAO.getAllMedicalRecords()) {
+		for (MedicalRecord med : medicalRecordRepository.getAllMedicalRecords()) {
 			for (Person p : livingAtThisAdress) {
 				if (med.getFirstName().equals(p.getFirstName()) && med.getLastName().equals(p.getLastName())) {
 					String date = med.getBirthdate();
@@ -74,14 +74,14 @@ public class URLService {
 		List<String> adressOfFireStation = new ArrayList<>();
 		List<phoneAlertDTO> listOfPhoneNumber = new ArrayList<phoneAlertDTO>();
 		List<String> alreadyExistingPhone = new ArrayList<String>();
-		for (FireStation fs : fireStationDAO.getAllFireStations()) {
+		for (FireStation fs : fireStationRepository.getAllFireStations()) {
 
 			if (fs.getStation().equals(firestation_number)) {
 				adressOfFireStation.add(fs.getAddress());
 			}
 		}
 
-		for (Person p : personDAO.getAllPersons()) {
+		for (Person p : personRepository.getAllPersons()) {
 			for (String ad : adressOfFireStation) {
 				if (p.getAddress().equals(ad)) {
 					phoneAlertDTO newItem = new phoneAlertDTO(p.getPhone());
@@ -103,11 +103,11 @@ public class URLService {
 
 		List<fireDTO> results = new ArrayList<fireDTO>();
 
-		for (Person p : personDAO.getAllPersons()) {
+		for (Person p : personRepository.getAllPersons()) {
 
 			if (p.getAddress().equals(address)) {
 
-				for (MedicalRecord medRec : medicalRecordDAO.getAllMedicalRecords()) {
+				for (MedicalRecord medRec : medicalRecordRepository.getAllMedicalRecords()) {
 
 					if (medRec.getFirstName().equals(p.getFirstName())
 							&& medRec.getLastName().equals(p.getLastName())) {
@@ -139,7 +139,7 @@ public class URLService {
 
 		for (String s : IDStation) {
 
-			for (FireStation p : fireStationDAO.getAllFireStations()) {
+			for (FireStation p : fireStationRepository.getAllFireStations()) {
 
 				if (p.getStation().equals(s)) {
 					adressDeservedByIDStations.add(p.getAddress());
@@ -149,11 +149,11 @@ public class URLService {
 
 		for (String adress : adressDeservedByIDStations) {
 
-			for (Person p : personDAO.getAllPersons()) {
+			for (Person p : personRepository.getAllPersons()) {
 
 				if (p.getAddress().equals(adress)) {
 
-					for (MedicalRecord medRec : medicalRecordDAO.getAllMedicalRecords()) {
+					for (MedicalRecord medRec : medicalRecordRepository.getAllMedicalRecords()) {
 
 						if (medRec.getFirstName().equals(p.getFirstName())
 								&& medRec.getLastName().equals(p.getLastName())) {
@@ -179,11 +179,11 @@ public class URLService {
 		List<personInfoDTO> result = new ArrayList<>();
 		int indexSwitcher = 0;
 
-		for (Person p : personDAO.getAllPersons()) {
+		for (Person p : personRepository.getAllPersons()) {
 
 			if (p.getLastName().equals(lastName)) {
 
-				for (MedicalRecord medRec : medicalRecordDAO.getAllMedicalRecords()) {
+				for (MedicalRecord medRec : medicalRecordRepository.getAllMedicalRecords()) {
 
 					if (medRec.getLastName().equals(p.getLastName())
 							&& medRec.getFirstName().equals(p.getFirstName())) {
@@ -225,7 +225,7 @@ public class URLService {
 		ArrayList<communityEmailDTO> emailsOfCityInhabitants = new ArrayList<>();
 		Boolean mailIsExisting = false;
 
-		for (Person p : personDAO.getAllPersons()) {
+		for (Person p : personRepository.getAllPersons()) {
 
 			if (p.getCity().equals(city)) {
 

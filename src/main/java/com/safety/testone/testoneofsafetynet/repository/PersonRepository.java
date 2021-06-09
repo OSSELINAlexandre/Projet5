@@ -1,4 +1,4 @@
-package com.safety.testone.testoneofsafetynet.DAO;
+package com.safety.testone.testoneofsafetynet.repository;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,22 +16,20 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.safety.testone.testoneofsafetynet.CustomProperties;
 import com.safety.testone.testoneofsafetynet.model.Person;
-import com.safety.testone.testoneofsafetynet.repository.GeneralData;
-import com.safety.testone.testoneofsafetynet.repository.generalDataDAO;
 
 @Component
-public class PersonDAO {
+public class PersonRepository {
 
 	@Autowired
 	CustomProperties customProperties;
 
 	@Autowired
-	private generalDataDAO generalDAO;
+	private DAOFactory generalDAO;
 
-	private GeneralData gen;
+	private GeneralDataRepository gen;
 	private List<Person> personList;
 
-	public PersonDAO() {
+	public PersonRepository() {
 
 	}
 

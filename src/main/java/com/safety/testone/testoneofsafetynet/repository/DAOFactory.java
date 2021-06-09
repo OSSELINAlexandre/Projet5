@@ -19,22 +19,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safety.testone.testoneofsafetynet.CustomProperties;
 
 @Component
-public class generalDataDAO {
+public class DAOFactory {
 
 	@Autowired
 	CustomProperties customProperties;
 
 
 
-	public generalDataDAO() {
+	public DAOFactory() {
 	}
 
-	public GeneralData loadDataFromFile() {
+	public GeneralDataRepository loadDataFromFile() {
 
-		GeneralData gen = new GeneralData();
+		GeneralDataRepository gen = new GeneralDataRepository();
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
-			gen = objectMapper.readValue(new File(customProperties.getFileLoc()), GeneralData.class);
+			gen = objectMapper.readValue(new File(customProperties.getFileLoc()), GeneralDataRepository.class);
 		} catch (IOException e) {
 			System.out.println("Error in the loading of the file");
 			e.printStackTrace();
