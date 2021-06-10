@@ -3,6 +3,7 @@ package com.safety.testone.testoneofsafetynet.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,28 +23,55 @@ public class MedicalRecordsController {
 	MedicalRecordService medicalRecordService;
 
 	@GetMapping(value = "/medicalrecords")
-	public Iterable<MedicalRecord> getAllRecords() {
+	public ResponseEntity<Iterable<MedicalRecord>> getAllRecords() {
 
-		return medicalRecordService.getAllMedicalRecords();
+		Iterable<MedicalRecord> result = medicalRecordService.getAllMedicalRecords();
+		if (result == null) {
+			return ResponseEntity.notFound().build();
+		} else {
+			return ResponseEntity.ok().body(result);
+		}
+
 	}
 
 	@PostMapping(value = "/medicalrecords")
-	public MedicalRecord postANewMedicalRecord(@RequestBody MedicalRecord MedRec) {
-		return medicalRecordService.saveANewMedicalRecord(MedRec);
+	public ResponseEntity<Void> postANewMedicalRecord(@RequestBody MedicalRecord MedRec) {
+		Boolean result = medicalRecordService.saveANewMedicalRecord(MedRec);
+
+		if (result) {
+			return ResponseEntity.ok().build();
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+
 	}
 
 	@DeleteMapping(value = "/medicalrecords/{firstName}/{thelastName}")
-	public MedicalRecord createAPerson(@PathVariable("firstName") String firstName,
+	public ResponseEntity<Void> createAPerson(@PathVariable("firstName") String firstName,
 			@PathVariable("thelastName") String thelastName) {
 
-		return medicalRecordService.deleteAMedicalFile(firstName, thelastName);
+		Boolean result = medicalRecordService.deleteAMedicalFile(firstName, thelastName);
+
+		if (result) {
+			return ResponseEntity.ok().build();
+		} else {
+			return ResponseEntity.notFound().build();
+		}
 
 	}
 
 	@PutMapping(value = "/medicalrecords")
-	public MedicalRecord updateAPerson(@RequestBody MedicalRecord medRec) {
+	public ResponseEntity<Void> updateAPerson(@RequestBody MedicalRecord medRec) {
 
-		return medicalRecordService.updateAMedicalFile(medRec);
+		MedicalRecord result = medicalRecordService.updateAMedicalFile(medRec);
+
+		if (result == null) {
+
+			return ResponseEntity.ok().build();
+		} else {
+			return ResponseEntity.accepted().build();
+
+		}
 	}
 
 }

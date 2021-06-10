@@ -2,7 +2,7 @@ package com.safety.testone.testoneofsafetynet.DTO;
 
 import java.util.List;
 
-public class fireDTO {
+public class FireDTO {
 
 	private String name;
 	private String lastName;
@@ -10,11 +10,11 @@ public class fireDTO {
 	private String age;
 	private List<String> medRecords;
 
-	public fireDTO() {
+	public FireDTO() {
 		super();
 	}
 
-	public fireDTO( String name, String lastName, String phoneNumber, String age, List<String> medRecords) {
+	public FireDTO( String name, String lastName, String phoneNumber, String age, List<String> medRecords) {
 		super();
 
 		this.name = name;

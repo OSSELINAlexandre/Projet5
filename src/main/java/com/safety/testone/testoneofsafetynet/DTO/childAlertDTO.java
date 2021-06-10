@@ -1,44 +1,34 @@
 package com.safety.testone.testoneofsafetynet.DTO;
 
-public class childAlertDTO {
+import java.util.List;
 
-	private String firstName;
-	private String lastName;
-	private String age;
+import com.safety.testone.testoneofsafetynet.model.Person;
 
-	public childAlertDTO(String firstName, String lastName, String age) {
+public class ChildAlertDTO {
+
+	
+	private List<ChildInHouseAlertDTO> childInTheHouse;
+	private List<Person> AdultInTheHouse;
+	public ChildAlertDTO(List<ChildInHouseAlertDTO> childInTheHouse, List<Person> adultInTheHouse) {
 		super();
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.age = age;
+		this.childInTheHouse = childInTheHouse;
+		AdultInTheHouse = adultInTheHouse;
 	}
-
-	public childAlertDTO() {
+	public ChildAlertDTO() {
 		super();
 	}
-
-	public String getFirstName() {
-		return firstName;
+	public List<ChildInHouseAlertDTO> getChildInTheHouse() {
+		return childInTheHouse;
 	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+	public void setChildInTheHouse(List<ChildInHouseAlertDTO> childInTheHouse) {
+		this.childInTheHouse = childInTheHouse;
 	}
-
-	public String getLastName() {
-		return lastName;
+	public List<Person> getAdultInTheHouse() {
+		return AdultInTheHouse;
 	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+	public void setAdultInTheHouse(List<Person> adultInTheHouse) {
+		AdultInTheHouse = adultInTheHouse;
 	}
-
-	public String getAge() {
-		return age;
-	}
-
-	public void setAge(String age) {
-		this.age = age;
-	}
-
+	
+	
 }

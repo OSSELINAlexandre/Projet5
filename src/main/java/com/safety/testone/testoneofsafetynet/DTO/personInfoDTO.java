@@ -2,7 +2,7 @@ package com.safety.testone.testoneofsafetynet.DTO;
 
 import java.util.List;
 
-public class personInfoDTO {
+public class PersonInfoDTO {
 
 	private String lastName;
 	private String name;
@@ -11,11 +11,11 @@ public class personInfoDTO {
 	private String eMail;
 	private List<String> medRecords;
 
-	public personInfoDTO() {
+	public PersonInfoDTO() {
 		super();
 	}
 
-	public personInfoDTO(String lastName, String name, String address, String age, String eMail,
+	public PersonInfoDTO(String lastName, String name, String address, String age, String eMail,
 			List<String> medRecords) {
 		super();
 		this.name = name;

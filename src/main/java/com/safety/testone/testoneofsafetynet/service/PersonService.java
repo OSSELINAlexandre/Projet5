@@ -21,22 +21,42 @@ public class PersonService {
 
 	public Iterable<Person> getAllPersons() {
 
-		return personRepository.getAllPersons();
+		return personRepository.getAllData();
 	}
 
-	public Person saveANewPerson(Person person) {
+	public Boolean saveANewPerson(Person person) {
 
-		return personRepository.saveAPerson(person);
+		return personRepository.save(person);
 	}
 
-	public Person deleteAPerson(String firstName, String lastName) {
+	public Boolean deleteAPerson(String firstName, String lastName) {
 
-		return personRepository.deleteAPerson(firstName, lastName);
+		for (Person p : personRepository.getAllData()) {
+
+			if (p.getFirstName().equals(firstName) && p.getLastName().equals(lastName)) {
+
+				return personRepository.delete(p);
+
+			}
+		}
+
+		return false;
 	}
 
 	public Person updateAPerson(Person p) {
 
-		return personRepository.updateAPerson(p);
+		Person result = new Person();
+		List<Person> copyOfOriginial = personRepository.getAllData();
+		for (int i = 0; i < copyOfOriginial.size(); i++) {
+
+			if (copyOfOriginial.get(i).getFirstName().equals(p.getFirstName())
+					&& copyOfOriginial.get(i).getLastName().equals(p.getLastName())) {
+				result = personRepository.update(i, p);
+
+			}
+		}
+
+		return result;
 	}
 
 }

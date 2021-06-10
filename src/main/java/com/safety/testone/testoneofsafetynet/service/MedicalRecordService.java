@@ -21,21 +21,40 @@ public class MedicalRecordService {
 
 	public Iterable<MedicalRecord> getAllMedicalRecords() {
 
-		return medicalRecordRepository.getAllMedicalRecords();
+		return medicalRecordRepository.getAllData();
 	}
 
-	public MedicalRecord saveANewMedicalRecord(MedicalRecord medRec) {
+	public Boolean saveANewMedicalRecord(MedicalRecord medRec) {
 		return medicalRecordRepository.save(medRec);
 	}
 
-	public MedicalRecord deleteAMedicalFile(String firstName, String thelastName) {
+	public Boolean deleteAMedicalFile(String firstName, String thelastName) {
 
-		return medicalRecordRepository.deleteAGivenFile(firstName, thelastName);
+		List<MedicalRecord> copyOfRealList = medicalRecordRepository.getAllData();
+
+		for (MedicalRecord medred : copyOfRealList) {
+
+			if (medred.getFirstName().equals(firstName) && medred.getLastName().equals(thelastName)) {
+
+				return medicalRecordRepository.delete(medred);
+			}
+		}
+
+		return false;
 	}
 
 	public MedicalRecord updateAMedicalFile(MedicalRecord medRec) {
-		// TODO Auto-generated method stub
-		return medicalRecordRepository.updateAFile(medRec);
-	}
 
+		List<MedicalRecord> copyOfRealList = medicalRecordRepository.getAllData();
+
+		for (int i = 0; i < copyOfRealList.size(); i++) {
+
+			if (copyOfRealList.get(i).getFirstName().equals(medRec.getFirstName())
+					&& copyOfRealList.get(i).getLastName().equals(medRec.getLastName())) {
+				return medicalRecordRepository.update(i, medRec);
+			}
+		}
+		return null;
+/// I changed the return method to null, check if that's working ! :)
+	}
 }

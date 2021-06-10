@@ -8,15 +8,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.safety.testone.testoneofsafetynet.DTO.childAlertDTO;
-import com.safety.testone.testoneofsafetynet.DTO.communityEmailDTO;
-import com.safety.testone.testoneofsafetynet.DTO.fireDTO;
-import com.safety.testone.testoneofsafetynet.DTO.floodDTO;
-import com.safety.testone.testoneofsafetynet.DTO.personInfoDTO;
-import com.safety.testone.testoneofsafetynet.DTO.phoneAlertDTO;
+import com.safety.testone.testoneofsafetynet.DTO.ChildAlertDTO;
+import com.safety.testone.testoneofsafetynet.DTO.ChildInHouseAlertDTO;
+import com.safety.testone.testoneofsafetynet.DTO.CommunityEmailDTO;
+import com.safety.testone.testoneofsafetynet.DTO.FireDTO;
+import com.safety.testone.testoneofsafetynet.DTO.FireStationDTO;
+import com.safety.testone.testoneofsafetynet.DTO.FireStationGeneralDTO;
+import com.safety.testone.testoneofsafetynet.DTO.FloodDTO;
+import com.safety.testone.testoneofsafetynet.DTO.PersonInfoDTO;
+import com.safety.testone.testoneofsafetynet.DTO.PhoneAlertDTO;
 import com.safety.testone.testoneofsafetynet.model.FireStation;
 import com.safety.testone.testoneofsafetynet.model.MedicalRecord;
 import com.safety.testone.testoneofsafetynet.model.Person;
@@ -26,6 +31,9 @@ import com.safety.testone.testoneofsafetynet.repository.PersonRepository;
 
 @Service
 public class URLService {
+
+	private static final Logger logger = LogManager.getLogger(URLService.class);
+
 	@Autowired
 	PersonRepository personRepository;
 
@@ -39,54 +47,119 @@ public class URLService {
 		super();
 	}
 
-	public List<childAlertDTO> getListOfChildBasedOnAddress(String adress) {
+	public FireStationGeneralDTO getListOfPeopleCoveredByFireStation(String id) {
+
+		ArrayList<String> adressCoveredByStation = new ArrayList<>();
+
+		for (FireStation s : fireStationRepository.getAllData()) {
+
+			if (s.getStation().equals(id)) {
+
+				adressCoveredByStation.add(s.getAddress());
+				logger.debug(s.getAddress() + " added to the adressCoveredByStation for id " + id);
+			}
+
+		}
+
+		ArrayList<FireStationDTO> citizenLivingClose = new ArrayList<>();
+
+		for (String s : adressCoveredByStation) {
+
+			for (Person p : personRepository.getAllData()) {
+
+				if (p.getAddress().equals(s)) {
+
+					logger.debug(p.getFirstName() + ", " + p.getLastName()
+							+ " supposed to live in the area of fireStation number  " + id);
+
+					FireStationDTO newItem = new FireStationDTO(p.getFirstName(), p.getLastName(), p.getAddress(),
+							p.getPhone());
+					citizenLivingClose.add(newItem);
+
+				}
+
+			}
+		}
+
+		FireStationGeneralDTO result = new FireStationGeneralDTO(citizenLivingClose, 0, 0);
+
+		for (FireStationDTO p : citizenLivingClose) {
+
+			for (MedicalRecord medRec : medicalRecordRepository.getAllData()) {
+
+				if (medRec.getFirstName().equals(p.getFirstName()) && medRec.getLastName().equals(p.getLastName())) {
+
+					if (getTheAge(medRec.getBirthdate()) <= 18) {
+						logger.debug("This is the age of the CHILD " + getTheAge(medRec.getBirthdate()));
+						int Result = result.getChildCount() + 1;
+						result.setChildCount(Result);
+					} else {
+						logger.debug("This is the age of the ADULT " + getTheAge(medRec.getBirthdate()));
+						int Result = result.getAdultCount() + 1;
+						result.setAdultCount(Result);
+
+					}
+
+				}
+			}
+
+		}
+
+		return result;
+
+	}
+
+	public ChildAlertDTO getListOfChildBasedOnAddress(String adress) {
 		List<Person> livingAtThisAdress = new ArrayList<Person>();
-		List<childAlertDTO> livingAtThisAdressUnder18 = new ArrayList<childAlertDTO>();
-		for (Person p : personRepository.getAllPersons()) {
+		List<ChildInHouseAlertDTO> livingAtThisAdressUnder18 = new ArrayList<ChildInHouseAlertDTO>();
+		List<Person> livingAtThisAdressAbove18 = new ArrayList<Person>();
+		ChildInHouseAlertDTO newChild = new ChildInHouseAlertDTO();
+		for (Person p : personRepository.getAllData()) {
 			if (p.getAddress().equals(adress)) {
 				livingAtThisAdress.add(p);
 			}
 		}
 
-		for (MedicalRecord med : medicalRecordRepository.getAllMedicalRecords()) {
+		for (MedicalRecord med : medicalRecordRepository.getAllData()) {
 			for (Person p : livingAtThisAdress) {
 				if (med.getFirstName().equals(p.getFirstName()) && med.getLastName().equals(p.getLastName())) {
-					String date = med.getBirthdate();
-					String[] formatter = date.split("/");
-					LocalDate pastDate = LocalDate.of(Integer.parseInt(formatter[2]), Integer.parseInt(formatter[0]),
-							Integer.parseInt(formatter[1]));
-					LocalDate nowDate = LocalDate.now();
-					Period period = Period.between(pastDate, nowDate);
-					Long result = period.toTotalMonths();
-					if (result <= 216) {
-						childAlertDTO newChild = new childAlertDTO(p.getFirstName(), p.getLastName(),
-								med.getBirthdate());
+					if (getTheAge(med.getBirthdate()) <= 18) {
+						newChild = new ChildInHouseAlertDTO(p.getFirstName(), p.getLastName(),
+								"" + getTheAge(med.getBirthdate()));
 						livingAtThisAdressUnder18.add(newChild);
+						logger.debug(newChild.getFirstName() + ", " + newChild.getLastName()
+								+ "is living  at the adress " + p.getAddress() + " and is under 18");
+					} else {
+						livingAtThisAdressAbove18.add(p);
 					}
 				}
 			}
+
 		}
-		return livingAtThisAdressUnder18;
+
+		ChildAlertDTO result = new ChildAlertDTO(livingAtThisAdressUnder18, livingAtThisAdressAbove18);
+		return result;
 	}
 
-	public List<phoneAlertDTO> getListOfPhoneNumberOfPeopleLivingCloseToTheFireStation(String firestation_number) {
+	public List<PhoneAlertDTO> getListOfPhoneNumberOfPeopleLivingCloseToTheFireStation(String firestation_number) {
 
 		List<String> adressOfFireStation = new ArrayList<>();
-		List<phoneAlertDTO> listOfPhoneNumber = new ArrayList<phoneAlertDTO>();
+		List<PhoneAlertDTO> listOfPhoneNumber = new ArrayList<PhoneAlertDTO>();
 		List<String> alreadyExistingPhone = new ArrayList<String>();
-		for (FireStation fs : fireStationRepository.getAllFireStations()) {
+		for (FireStation fs : fireStationRepository.getAllData()) {
 
 			if (fs.getStation().equals(firestation_number)) {
 				adressOfFireStation.add(fs.getAddress());
 			}
 		}
 
-		for (Person p : personRepository.getAllPersons()) {
+		for (Person p : personRepository.getAllData()) {
 			for (String ad : adressOfFireStation) {
 				if (p.getAddress().equals(ad)) {
-					phoneAlertDTO newItem = new phoneAlertDTO(p.getPhone());
+					PhoneAlertDTO newItem = new PhoneAlertDTO(p.getPhone());
+					logger.debug(p.getFirstName() + ", " + p.getLastName() + " phone number is " + p.getPhone());
 
-					for (phoneAlertDTO phone : listOfPhoneNumber) {
+					for (PhoneAlertDTO phone : listOfPhoneNumber) {
 						alreadyExistingPhone.add(phone.getPhoneNumber());
 					}
 
@@ -99,15 +172,15 @@ public class URLService {
 		return listOfPhoneNumber;
 	}
 
-	public List<fireDTO> getListOfInhabitantAndPhoneNumberOfFireStationCloseBy(String address) {
+	public List<FireDTO> getListOfInhabitantAndPhoneNumberOfFireStationCloseBy(String address) {
 
-		List<fireDTO> results = new ArrayList<fireDTO>();
+		List<FireDTO> results = new ArrayList<FireDTO>();
 
-		for (Person p : personRepository.getAllPersons()) {
+		for (Person p : personRepository.getAllData()) {
 
 			if (p.getAddress().equals(address)) {
 
-				for (MedicalRecord medRec : medicalRecordRepository.getAllMedicalRecords()) {
+				for (MedicalRecord medRec : medicalRecordRepository.getAllData()) {
 
 					if (medRec.getFirstName().equals(p.getFirstName())
 							&& medRec.getLastName().equals(p.getLastName())) {
@@ -119,9 +192,14 @@ public class URLService {
 						int result = getTheAge(medRec.getBirthdate());
 						;
 
-						fireDTO newItem = new fireDTO(p.getFirstName(), p.getLastName(), p.getPhone(), "" + result,
+						FireDTO newItem = new FireDTO(p.getFirstName(), p.getLastName(), p.getPhone(), "" + result,
 								medRecords);
 						results.add(newItem);
+
+						logger.debug(p.getFirstName() + ", " + p.getLastName() + " is living at the adress " + address
+								+ " and MedRecord has been found" + medRec.getAllergies() + ", posology"
+								+ medRec.getMedications());
+
 					}
 				}
 
@@ -132,14 +210,14 @@ public class URLService {
 		return results;
 	}
 
-	public List<floodDTO> getListOfAllAddressProtectedByTheFireStation(List<String> IDStation) {
+	public List<FloodDTO> getListOfAllAddressProtectedByTheFireStation(List<String> IDStation) {
 
 		List<String> adressDeservedByIDStations = new ArrayList<>();
-		List<floodDTO> results = new ArrayList<>();
+		List<FloodDTO> results = new ArrayList<>();
 
 		for (String s : IDStation) {
 
-			for (FireStation p : fireStationRepository.getAllFireStations()) {
+			for (FireStation p : fireStationRepository.getAllData()) {
 
 				if (p.getStation().equals(s)) {
 					adressDeservedByIDStations.add(p.getAddress());
@@ -149,11 +227,11 @@ public class URLService {
 
 		for (String adress : adressDeservedByIDStations) {
 
-			for (Person p : personRepository.getAllPersons()) {
+			for (Person p : personRepository.getAllData()) {
 
 				if (p.getAddress().equals(adress)) {
 
-					for (MedicalRecord medRec : medicalRecordRepository.getAllMedicalRecords()) {
+					for (MedicalRecord medRec : medicalRecordRepository.getAllData()) {
 
 						if (medRec.getFirstName().equals(p.getFirstName())
 								&& medRec.getLastName().equals(p.getLastName())) {
@@ -161,9 +239,13 @@ public class URLService {
 							newItemMedRec.addAll(medRec.getMedications());
 							newItemMedRec.addAll(medRec.getAllergies());
 							int age = getTheAge(medRec.getBirthdate());
-							floodDTO newItem = new floodDTO(p.getAddress(), p.getFirstName(), p.getLastName(),
+							FloodDTO newItem = new FloodDTO(p.getAddress(), p.getFirstName(), p.getLastName(),
 									p.getPhone(), "" + age, newItemMedRec);
 							results.add(newItem);
+
+							logger.debug(p.getFirstName() + ", " + p.getLastName()
+									+ " is protected by FireStation at the adress" + adress
+									+ " with added medical Records");
 						}
 					}
 
@@ -174,16 +256,16 @@ public class URLService {
 		return results;
 	}
 
-	public List<personInfoDTO> getMedicalInformationOfPeople(String firstName, String lastName) {
+	public List<PersonInfoDTO> getMedicalInformationOfPeople(String firstName, String lastName) {
 
-		List<personInfoDTO> result = new ArrayList<>();
+		List<PersonInfoDTO> result = new ArrayList<>();
 		int indexSwitcher = 0;
 
-		for (Person p : personRepository.getAllPersons()) {
+		for (Person p : personRepository.getAllData()) {
 
 			if (p.getLastName().equals(lastName)) {
 
-				for (MedicalRecord medRec : medicalRecordRepository.getAllMedicalRecords()) {
+				for (MedicalRecord medRec : medicalRecordRepository.getAllData()) {
 
 					if (medRec.getLastName().equals(p.getLastName())
 							&& medRec.getFirstName().equals(p.getFirstName())) {
@@ -192,13 +274,20 @@ public class URLService {
 						List<String> newItemMedicalRecord = new ArrayList<String>();
 						newItemMedicalRecord.addAll(medRec.getMedications());
 						newItemMedicalRecord.addAll(medRec.getAllergies());
-						personInfoDTO newItem = new personInfoDTO(medRec.getLastName(), medRec.getFirstName(),
+						PersonInfoDTO newItem = new PersonInfoDTO(medRec.getLastName(), medRec.getFirstName(),
 								p.getAddress(), "" + ageItem, p.getEmail(), newItemMedicalRecord);
 						result.add(newItem);
+						logger.debug(p.getLastName() + " should be equal to " + lastName + " , member : "
+								+ p.getFirstName() + " adding all the medical records ! ");
 					}
 				}
 			}
 		}
+
+		/**
+		 * This part of the code is solely to put the requested name first in the list
+		 * appearing. Indeed, we set the required name first in the list appearance.
+		 */
 
 		for (int i = 0; i < result.size(); i++) {
 
@@ -211,7 +300,7 @@ public class URLService {
 
 		if (indexSwitcher != 0) {
 
-			personInfoDTO oldFirst = result.get(0);
+			PersonInfoDTO oldFirst = result.get(0);
 			result.set(0, result.get(indexSwitcher));
 			result.set(indexSwitcher, oldFirst);
 
@@ -220,18 +309,18 @@ public class URLService {
 		return result;
 	}
 
-	public List<communityEmailDTO> getAllEmailFromAllInhabitantOfCity(String city) {
+	public List<CommunityEmailDTO> getAllEmailFromAllInhabitantOfCity(String city) {
 
-		ArrayList<communityEmailDTO> emailsOfCityInhabitants = new ArrayList<>();
+		ArrayList<CommunityEmailDTO> emailsOfCityInhabitants = new ArrayList<>();
 		Boolean mailIsExisting = false;
 
-		for (Person p : personRepository.getAllPersons()) {
+		for (Person p : personRepository.getAllData()) {
 
 			if (p.getCity().equals(city)) {
 
-				communityEmailDTO newItem = new communityEmailDTO(p.getEmail());
+				CommunityEmailDTO newItem = new CommunityEmailDTO(p.getEmail());
 
-				for (communityEmailDTO existing : emailsOfCityInhabitants) {
+				for (CommunityEmailDTO existing : emailsOfCityInhabitants) {
 
 					if (existing.getEmail().equals(newItem.getEmail())) {
 
@@ -240,9 +329,13 @@ public class URLService {
 
 				}
 
+				logger.debug(p.getFirstName() + " , " + p.getLastName() + " email is " + p.getEmail()
+						+ "and live in the city of " + p.getCity() + "should be equal to " + city);
+
 				if (!mailIsExisting) {
 
 					emailsOfCityInhabitants.add(newItem);
+
 				}
 
 			}

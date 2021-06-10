@@ -9,7 +9,7 @@ import com.safety.testone.testoneofsafetynet.model.FireStation;
 import com.safety.testone.testoneofsafetynet.model.MedicalRecord;
 
 @Component
-public class FireStationRepository {
+public class FireStationRepository implements DAOMethods<FireStation> {
 
 	@Autowired
 	private DAOFactory generalDAO;
@@ -22,6 +22,22 @@ public class FireStationRepository {
 		super();
 	}
 
+	public DAOFactory getGeneralDAO() {
+		return generalDAO;
+	}
+
+	public void setGeneralDAO(DAOFactory generalDAO) {
+		this.generalDAO = generalDAO;
+	}
+
+	public GeneralDataRepository getGen() {
+		return gen;
+	}
+
+	public void setGen(GeneralDataRepository gen) {
+		this.gen = gen;
+	}
+
 	public List<FireStation> getFireStationList() {
 		return fireStationList;
 	}
@@ -30,46 +46,42 @@ public class FireStationRepository {
 		this.fireStationList = fireStationList;
 	}
 
-	public List<FireStation> getAllFireStations() {
-
-		if (gen == null)
-			Instantiate();
-
-		return fireStationList;
-
-	}
-
 	private void Instantiate() {
 		gen = generalDAO.loadDataFromFile();
 		fireStationList = gen.getFirestations();
 	}
 
-	public FireStation saveTheStation(FireStation caserne) {
-
+	@Override
+	public Boolean save(FireStation t) {
 		if (gen == null)
 			Instantiate();
 
-		fireStationList.add(caserne);
-		return caserne;
+		fireStationList.add(t);
+		return true;
 	}
 
-	public Boolean deleteTheStation(FireStation wantedtoDelete) {
-
+	@Override
+	public Boolean delete(FireStation t) {
 		if (gen == null)
 			Instantiate();
-		
-		return fireStationList.remove(wantedtoDelete);
+
+		return fireStationList.remove(t);
 	}
 
-	public FireStation updateTheStation(int i, FireStation newItem) {
-
+	@Override
+	public FireStation update(int i, FireStation t) {
 		if (gen == null)
 			Instantiate();
 
-		
-		return fireStationList.set(i, newItem);
+		return fireStationList.set(i, t);
+	}
 
-		
+	@Override
+	public List<FireStation> getAllData() {
+		if (gen == null)
+			Instantiate();
+
+		return fireStationList;
 	}
 
 }

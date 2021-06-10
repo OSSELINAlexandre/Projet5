@@ -15,10 +15,11 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.safety.testone.testoneofsafetynet.CustomProperties;
+import com.safety.testone.testoneofsafetynet.model.MedicalRecord;
 import com.safety.testone.testoneofsafetynet.model.Person;
 
 @Component
-public class PersonRepository {
+public class PersonRepository implements DAOMethods<Person> {
 
 	@Autowired
 	CustomProperties customProperties;
@@ -33,16 +34,6 @@ public class PersonRepository {
 
 	}
 
-	public List<Person> getAllPersons() {
-
-		if (gen == null) {
-			Instantiate();
-		}
-
-		return personList;
-
-	}
-
 	private void Instantiate() {
 
 		gen = generalDAO.loadDataFromFile();
@@ -50,54 +41,43 @@ public class PersonRepository {
 
 	}
 
-	public Person saveAPerson(Person person) {
-
+	@Override
+	public Boolean save(Person t) {
 		if (gen == null) {
 			Instantiate();
 		}
 
-		personList.add(person);
-
-		return person;
+		return personList.add(t);
 	}
 
-	public Person deleteAPerson(String firstName, String lastName) {
+	@Override
+	public Boolean delete(Person t) {
 
-		if (gen == null) {
-			Instantiate();
+		if (personList.remove(t)) {
+			return true;
+		} else {
+			return false;
 		}
-
-		for (Person p : personList) {
-
-			if (p.getFirstName().equals(firstName) && p.getLastName().equals(lastName)) {
-
-				Person winner = p;
-				personList.remove(p);
-				return p;
-			}
-		}
-
-		return null;
 	}
 
-	public Person updateAPerson(Person P) {
-
+	@Override
+	public Person update(int i, Person t) {
 		if (gen == null) {
 			Instantiate();
 		}
 
-		for (int i = 0; i < personList.size(); i++) {
+		return personList.set(i, t);
 
-			if (personList.get(i).getFirstName().equals(P.getFirstName())
-					&& personList.get(i).getLastName().equals(P.getLastName())) {
+	}
 
-				personList.set(i, P);
-				return P;
-			}
-
+	@Override
+	public List<Person> getAllData() {
+		
+		if (gen == null) {
+			Instantiate();
 		}
 
-		return null;
+		return personList;
 	}
 
 }

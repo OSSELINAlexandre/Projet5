@@ -1,15 +1,15 @@
 package com.safety.testone.testoneofsafetynet.DTO;
 
-public class communityEmailDTO {
+public class CommunityEmailDTO {
 	
 	private String email;
 
 
-	public communityEmailDTO() {
+	public CommunityEmailDTO() {
 		super();
 	}
 
-	public communityEmailDTO(String email) {
+	public CommunityEmailDTO(String email) {
 		super();
 		this.email = email;
 	}

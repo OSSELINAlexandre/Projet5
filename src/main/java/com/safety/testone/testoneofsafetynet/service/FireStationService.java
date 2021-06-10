@@ -22,21 +22,21 @@ public class FireStationService {
 
 	public Iterable<FireStation> getAllFireStations() {
 
-		return fireStationRepository.getAllFireStations();
+		return fireStationRepository.getAllData();
 	}
 
-	public FireStation saveANewStation(FireStation caserne) {
+	public Boolean saveANewStation(FireStation caserne) {
 		// TODO Auto-generated method stub
-		return fireStationRepository.saveTheStation(caserne);
+		return fireStationRepository.save(caserne);
 	}
 
 	public Boolean deleteANewStation(String address) {
 
-		for (FireStation fs : fireStationRepository.getAllFireStations()) {
+		for (FireStation fs : fireStationRepository.getAllData()) {
 
 			if (fs.getAddress().equals(address)) {
 
-				return fireStationRepository.deleteTheStation(fs);
+				return fireStationRepository.delete(fs);
 			}
 
 		}
@@ -46,8 +46,8 @@ public class FireStationService {
 
 	public FireStation updateAStation(String address, String newId) {
 
-		List<FireStation> copyFireStationList = fireStationRepository.getAllFireStations();
-		FireStation newStation = new FireStation();
+		List<FireStation> copyFireStationList = fireStationRepository.getAllData();
+		FireStation newStation = null;
 
 		for (FireStation fs : copyFireStationList) {
 
@@ -57,7 +57,7 @@ public class FireStationService {
 
 					newStation = copyFireStationList.get(i);
 					newStation.setStation(newId);
-					fireStationRepository.updateTheStation(i, newStation);
+					fireStationRepository.update(i, newStation);
 				}
 			}
 		}

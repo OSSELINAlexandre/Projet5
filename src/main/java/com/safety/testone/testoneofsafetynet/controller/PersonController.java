@@ -1,6 +1,7 @@
 package com.safety.testone.testoneofsafetynet.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,26 +20,56 @@ public class PersonController {
 	PersonService personService;
 
 	@GetMapping(value = "/person")
-	public Iterable<Person> getAllPerson() {
+	public ResponseEntity<Iterable<Person>> getAllPerson() {
 
-		return personService.getAllPersons();
+		Iterable<Person> result = personService.getAllPersons();
+
+		if (result == null) {
+
+			return ResponseEntity.notFound().build();
+		} else {
+			return ResponseEntity.ok().body(result);
+		}
 	}
 
 	@PostMapping(value = "/person")
-	public Person saveAPerson(@RequestBody Person person) {
-		return personService.saveANewPerson(person);
+	public ResponseEntity<Void> saveAPerson(@RequestBody Person person) {
+
+		Boolean result = personService.saveANewPerson(person);
+
+		if (result) {
+			return ResponseEntity.ok().build();
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+
 	}
 
 	@DeleteMapping(value = "/person/{firstName}/{thelastName}")
-	public Person deleteAPerson(@PathVariable("firstName") String firstName, @PathVariable("thelastName") String thelastName) {
+	public ResponseEntity<Void> deleteAPerson(@PathVariable("firstName") String firstName,
+			@PathVariable("thelastName") String thelastName) {
 
-		return personService.deleteAPerson(firstName, thelastName);
+		Boolean result = personService.deleteAPerson(firstName, thelastName);
+
+		if (result) {
+			return ResponseEntity.ok().build();
+		} else {
+			return ResponseEntity.notFound().build();
+		}
 
 	}
 
 	@PutMapping(value = "/person")
-	public Person updateAPerson(@RequestBody Person p) {
+	public ResponseEntity<Void> updateAPerson(@RequestBody Person p) {
 
-		return personService.updateAPerson(p);
+		Person result = personService.updateAPerson(p);
+
+		if (result == null) {
+
+			return ResponseEntity.ok().build();
+		} else {
+			return ResponseEntity.accepted().build();
+		}
+
 	}
 }
