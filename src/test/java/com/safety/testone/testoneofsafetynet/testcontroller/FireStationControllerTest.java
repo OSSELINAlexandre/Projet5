@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safety.testone.testoneofsafetynet.model.FireStation;
+import com.safety.testone.testoneofsafetynet.model.MedicalRecord;
 import com.safety.testone.testoneofsafetynet.model.Person;
 
 @SpringBootTest
@@ -25,22 +29,55 @@ class FireStationControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
-	
 	@Test
-	public void testdeleteANewStation() throws Exception {
+	public void testdeleteFireStation_Shouldsend404_WhenFireStationDoesNotExists() throws Exception {
 
 		mockMvc.perform(MockMvcRequestBuilders.delete("/firestation/{address}", "Alex"))
+				.andExpect(status().isNotFound());
+
+	}
+
+	@Test
+	public void testdeleteFireStation_Shouldsend200_WhenFireStationExists() throws Exception {
+
+		mockMvc.perform(MockMvcRequestBuilders.delete("/firestation/{address}", "908 73rd St"))
 				.andExpect(status().isOk());
 
 	}
 
 	@Test
-	public void testSaveAPerson() throws Exception {
+	public void testpostANewFireStation_ShouldSend404_ifIsNOTOfClassFireStation() throws Exception {
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/firestation").content(asJsonString("AlexOSSELIN"))
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().is(400));
+	}
+
+	@Test
+	public void testpostANewFireStation_ShouldSend200_ifIsOfClassFireStation() throws Exception {
+
 
 		mockMvc.perform(MockMvcRequestBuilders.post("/firestation")
-				.content(asJsonString(new FireStation("rue du sacre coeur", "526")))
+				.content(asJsonString(new FireStation("Christ Church Avenue, Oxford", "2")))
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
-//TODO changer les codes de retours des applications		
+	}
+
+	@Test
+	public void testUpdateAFireStation_Shouldsend200_WhenFireStationExistInJson() throws Exception {
+
+		
+		mockMvc.perform(MockMvcRequestBuilders.put("/firestation/{address}/{newId}", "892 Downing Ct" , "7"))
+		.andExpect(status().isOk());
+
+	}
+
+	@Test
+	public void testUpdateAFireStation_Shouldsend404_WhenFireStationDoesNotExistInJson() throws Exception {
+
+
+		mockMvc.perform(MockMvcRequestBuilders.put("/firestation/{address}/{newId}", "Christ Church Avenue, Oxford", "2"))
+		.andExpect(status().isOk());
+
 	}
 
 	public static String asJsonString(final Object obj) {
@@ -50,18 +87,4 @@ class FireStationControllerTest {
 			throw new RuntimeException(e);
 		}
 	}
-	
-	
-	@Test
-	public void testUpdateAFireStation() throws Exception {
-
-		mockMvc.perform( MockMvcRequestBuilders
-			      .put("/firestation/{address}/{newId}", "32 RUE DU MOULIN" , "2")
-			      .content(asJsonString(new FireStation( "firstName2","2")))
-			      .contentType(MediaType.APPLICATION_JSON)
-			      .accept(MediaType.APPLICATION_JSON))
-			      .andExpect(status().isOk());
-
-	}
-
 }

@@ -45,7 +45,7 @@ public class PersonService {
 
 	public Person updateAPerson(Person p) {
 
-		Person result = new Person();
+		Person result = null;
 		List<Person> copyOfOriginial = personRepository.getAllData();
 		for (int i = 0; i < copyOfOriginial.size(); i++) {
 

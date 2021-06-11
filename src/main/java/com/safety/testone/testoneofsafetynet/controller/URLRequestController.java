@@ -20,6 +20,7 @@ import com.safety.testone.testoneofsafetynet.DTO.FireStationGeneralDTO;
 import com.safety.testone.testoneofsafetynet.DTO.FloodDTO;
 import com.safety.testone.testoneofsafetynet.DTO.PersonInfoDTO;
 import com.safety.testone.testoneofsafetynet.DTO.PhoneAlertDTO;
+import com.safety.testone.testoneofsafetynet.controller.exception.ChildAlertException;
 import com.safety.testone.testoneofsafetynet.controller.exception.FireStationNotValid;
 import com.safety.testone.testoneofsafetynet.model.FireStation;
 import com.safety.testone.testoneofsafetynet.model.MedicalRecord;
@@ -34,38 +35,39 @@ public class URLRequestController {
 	private static final Logger logger = LogManager.getLogger(URLRequestController.class);
 
 	@GetMapping(value = "/firestation")
-	public ResponseEntity getTheThing(
-			@RequestParam(name = "stationNumber", required = false) String id) {
+	public ResponseEntity getTheThing(@RequestParam(name = "stationNumber", required = false) String id) {
 
 		FireStationGeneralDTO result = urlService.getListOfPeopleCoveredByFireStation(id);
 
 		if (!result.getCoveredCitizens().isEmpty()) {
 
-			logger.info("Successfully return a result for /firestation with ?stationNumber = " + id);
+			logger.info("Successfully return a satisfying result call GET /firestation with ?stationNumber = " + id);
 			return ResponseEntity.ok().body(result);
 		} else {
 
-			logger.error("COULD NOT return a result for /firestation with ?stationNumber = " + id);
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("COULD NOT return a result for /firestation with ?stationNumber = " + id);
+			logger.error("COULD NOT return a result for GET /firestation with ?stationNumber = " + id);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body("COULD NOT return a result for /firestation with ?stationNumber = " + id);
 		}
 
 	}
 
 	@GetMapping(value = "/childAlert")
-	public ChildAlertDTO listOfChildLivingInTheAdress(@RequestParam(name = "address", required = true) String address) {
+	public ResponseEntity<ChildAlertDTO> listOfChildLivingInTheAdress(@RequestParam(name = "address", required = true) String address)
+			throws Throwable {
 
 		ChildAlertDTO result = urlService.getListOfChildBasedOnAddress(address);
 		if (result.getChildInTheHouse().isEmpty()) {
-			logger.error("the Call to ChildAlert with adress " + address + "returned empty List");
-			return result;
+			logger.error("the Call to GET /childAlert with adress " + address + " returned empty List");
+			return ResponseEntity.notFound().build();
 		} else {
-			logger.info("the Call to ChildAlert with adress " + address + "returned successfully");
-			return result;
+			logger.info("the Call to GET /childAlert with adress " + address + "returned successfully");
+			return ResponseEntity.ok().body(result);
 		}
 	}
 
 	@GetMapping(value = "/phoneAlert")
-	public Iterable<PhoneAlertDTO> getTheListOfPhoneNumberOfPeopleLivingCloseToTheFireStation(
+	public ResponseEntity<Iterable<PhoneAlertDTO>> getTheListOfPhoneNumberOfPeopleLivingCloseToTheFireStation(
 			@RequestParam(name = "firestation", required = true) String firestation_number) {
 
 		List<PhoneAlertDTO> result = urlService
@@ -73,80 +75,82 @@ public class URLRequestController {
 
 		if (!result.isEmpty()) {
 			logger.info(
-					"Sucessuffly called method getTheListOfPhoneNumberOfPeopleLivingCloseToTheFireStation in URLRequestController");
-			return result;
+					"Successfully return a satisfying result with call GET /phoneAlert?firestation={firestation_number} with firestation_number= "
+							+ firestation_number);
+			return ResponseEntity.ok().body(result);
 		} else {
-			logger.error(
-					"Couldn't return a result for method getTheListOfPhoneNumberOfPeopleLivingCloseToTheFireStation in URLRequestController");
-			return result;
+			logger.error("COUND NOT call GET /phoneAlert?firestation={firestation_number} with firestation_number = "
+					+ firestation_number);
+			return ResponseEntity.notFound().build();
 		}
 	}
 
 	@GetMapping(value = "/fire")
-	public Iterable<FireDTO> getListOfInhabitantAndPhoneNumberOfFireStationCloseBy(
+	public ResponseEntity<Iterable<FireDTO>> getListOfInhabitantAndPhoneNumberOfFireStationCloseBy(
 			@RequestParam(name = "address", required = true) String address) {
 
 		List<FireDTO> result = urlService.getListOfInhabitantAndPhoneNumberOfFireStationCloseBy(address);
 
 		if (!result.isEmpty()) {
-			logger.info(
-					"Sucessuffly called method getListOfInhabitantAndPhoneNumberOfFireStationCloseBy in URLRequestController");
-			return result;
+			logger.info("Successfully return a satisfying result with call GET /fire?address={address} with address= " + address);
+			return ResponseEntity.ok().body(result);
 		} else {
-			logger.error(
-					"Couldn't return a result for method getListOfInhabitantAndPhoneNumberOfFireStationCloseBy in URLRequestController");
-			return result;
+			logger.error("COUND NOT call GET /fire?address={address} with address= " + address);
+			return ResponseEntity.notFound().build();
 		}
 
 	}
 
 	@GetMapping(value = "/flood/stations")
-	public Iterable<FloodDTO> getListOfAllAddressProtectedByTheFireStation(
+	public ResponseEntity<Iterable<FloodDTO>> getListOfAllAddressProtectedByTheFireStation(
 			@RequestParam(name = "stations", required = true) List<String> IDStation) {
 
 		List<FloodDTO> result = urlService.getListOfAllAddressProtectedByTheFireStation(IDStation);
 
 		if (!result.isEmpty()) {
 			logger.info(
-					"Sucessuffly called method getListOfAllAddressProtectedByTheFireStation in URLRequestController");
-			return result;
+					"Successfully return a satisfying result with call GET /flood/stations?stations=IDStation where IDStation = List<String> = "
+							+ IDStation);
+			return ResponseEntity.ok().body(result);
 		} else {
-			logger.error(
-					"Couldn't return a result for method getListOfAllAddressProtectedByTheFireStation in URLRequestController");
-			return result;
+			logger.error("COUND NOT call GET /flood/stations?stations=IDStation where IDStation = List<String> = "
+					+ IDStation);
+			return ResponseEntity.notFound().build();
 		}
 	}
 
 	@GetMapping(value = "/personInfo")
-	public Iterable<PersonInfoDTO> getMedicalInformationOfPeople(
+	public ResponseEntity<Iterable<PersonInfoDTO>> getMedicalInformationOfPeople(
 			@RequestParam(name = "firstName", required = true) String firstName,
 			@RequestParam(name = "lastName", required = true) String lastName) {
 
 		List<PersonInfoDTO> result = urlService.getMedicalInformationOfPeople(firstName, lastName);
 
 		if (!result.isEmpty()) {
-			logger.info("Sucessuffly called method getMedicalInformationOfPeople in URLRequestController");
-			return result;
+			logger.info(
+					"Successfully return a satisfying  result with call GET /personInfo?firstName={firstName}&lastName={lastName} with firstName="
+							+ firstName + " , and lastName = " + lastName);
+			return ResponseEntity.ok().body(result);
 		} else {
-			logger.error("Couldn't return a result for method getMedicalInformationOfPeople in URLRequestController");
-			return result;
+			logger.error("COULD NOT call GET /personInfo?firstName={firstName}&lastName={lastName} with firstName="
+					+ firstName + " , and lastName = " + lastName);
+			return ResponseEntity.notFound().build();
 		}
 
 	}
 
 	@GetMapping(value = "/communityEmail")
-	public Iterable<CommunityEmailDTO> getAllEmailFromAllInhabitantOfCity(
+	public ResponseEntity<Iterable<CommunityEmailDTO>> getAllEmailFromAllInhabitantOfCity(
 			@RequestParam(name = "city", required = true) String city) {
 
 		List<CommunityEmailDTO> result = urlService.getAllEmailFromAllInhabitantOfCity(city);
 
 		if (!result.isEmpty()) {
-			logger.info("Sucessuffly called method getAllEmailFromAllInhabitantOfCity in URLRequestController");
-			return result;
+			logger.info("Successfully return a satisfying result with call GET /communityEmail?city={city} with city= " + city);
+			return ResponseEntity.ok().body(result);
 		} else {
-			logger.error(
-					"Couldn't return a result for method getAllEmailFromAllInhabitantOfCity in URLRequestController");
-			return result;
+			logger.error("COULD NOT call GET /communityEmail?city={city} with city= " + city);
+			return ResponseEntity.notFound().build();
 		}
 
 	}

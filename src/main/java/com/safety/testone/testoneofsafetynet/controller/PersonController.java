@@ -1,5 +1,7 @@
 package com.safety.testone.testoneofsafetynet.controller;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +18,8 @@ import com.safety.testone.testoneofsafetynet.service.PersonService;
 @RestController
 public class PersonController {
 
+	private static final Logger logger = LogManager.getLogger(PersonController.class);
+
 	@Autowired
 	PersonService personService;
 
@@ -25,9 +29,10 @@ public class PersonController {
 		Iterable<Person> result = personService.getAllPersons();
 
 		if (result == null) {
-
+			logger.info("Successfully return a satisfying result for GET /person ");
 			return ResponseEntity.notFound().build();
 		} else {
+			logger.error("COULD NOT return a satisfying result for GET /person ");
 			return ResponseEntity.ok().body(result);
 		}
 	}
@@ -38,8 +43,12 @@ public class PersonController {
 		Boolean result = personService.saveANewPerson(person);
 
 		if (result) {
+
+			logger.info("Successfully return a satisfying result for POST /person ");
 			return ResponseEntity.ok().build();
 		} else {
+
+			logger.error("COULD NOT return a satisfying result for POST /person ");
 			return ResponseEntity.notFound().build();
 		}
 
@@ -52,8 +61,10 @@ public class PersonController {
 		Boolean result = personService.deleteAPerson(firstName, thelastName);
 
 		if (result) {
+			logger.info("Successfully return a satisfying result for DELETE /person ");
 			return ResponseEntity.ok().build();
 		} else {
+			logger.error("COULD NOT return a satisfying result for DELETE /person ");
 			return ResponseEntity.notFound().build();
 		}
 
@@ -64,11 +75,13 @@ public class PersonController {
 
 		Person result = personService.updateAPerson(p);
 
-		if (result == null) {
-
+		
+		if (result != null) {
+			logger.info("Successfully return a satisfying result for PUT /person ");
 			return ResponseEntity.ok().build();
 		} else {
-			return ResponseEntity.accepted().build();
+			logger.error("COULD NOT return a satisfying result for PUT /person ");
+			return ResponseEntity.notFound().build();
 		}
 
 	}
