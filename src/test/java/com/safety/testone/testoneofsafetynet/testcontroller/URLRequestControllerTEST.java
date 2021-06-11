@@ -1,12 +1,10 @@
 package com.safety.testone.testoneofsafetynet.testcontroller;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,7 +19,6 @@ class URLRequestControllerTEST {
 	@Autowired
 	private MockMvc mockMvc;
 
-	@Disabled
 	@Test
 	public void testListOfChildLivingInTheAdress() throws Exception {
 
