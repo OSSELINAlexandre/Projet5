@@ -61,7 +61,7 @@ public class URLRequestController {
 			logger.error("the Call to GET /childAlert with adress " + address + " returned empty List");
 			return ResponseEntity.notFound().build();
 		} else {
-			logger.info("the Call to GET /childAlert with adress " + address + "returned successfully");
+			logger.info("the Call to GET /childAlert with adress " + address + " returned successfully");
 			return ResponseEntity.ok().body(result);
 		}
 	}

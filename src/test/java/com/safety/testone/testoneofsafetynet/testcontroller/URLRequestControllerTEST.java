@@ -20,12 +20,21 @@ class URLRequestControllerTEST {
 	private MockMvc mockMvc;
 
 	@Test
-	public void testListOfChildLivingInTheAdress() throws Exception {
+	public void testListOfChildLivingInTheAdress_ShouldReturn404_WhenAdressDoesNotContainChildren() throws Exception {
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/childAlert?address={adress}", "834 Binoc Ave"))
+		mockMvc.perform(MockMvcRequestBuilders.get("/childAlert?address={adress}", "644 Gershwin Cir"))
+				.andExpect(status().isNotFound());
+
+	}
+	
+	@Test
+	public void testListOfChildLivingInTheAdress_ShouldReturn200_WhenAdressDoesNotContainChildren() throws Exception {
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/childAlert?address={adress}", "1509 Culver St"))
 				.andExpect(status().isOk());
 
 	}
+
 
 	@Test
 	public void testListOfListCoverageByStationNumber_shouldRetrun200_WhenValueExistInJson() throws Exception {
@@ -108,18 +117,15 @@ class URLRequestControllerTEST {
 	@Test
 	public void testgetMedicalInformationOfPeople_ShouldReturn404_WhenPersonDoesNotExist() throws Exception {
 
-		mockMvc.perform(
-				MockMvcRequestBuilders.get("/personInfo?firstName={firstName}&lastName={lastName}", "Alex", "Pierre"))
-				.andExpect(status().isNotFound());
-
+		mockMvc.perform(MockMvcRequestBuilders.get("/personInfo?firstName={Jacob}&lastName={Boyd}", "Alex" , "O"))
+		.andExpect(status().isNotFound());
 	}
 
 	@Test
 	public void testgetMedicalInformationOfPeople_ShouldReturn200_WhenPersonExistInJson() throws Exception {
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/personInfo?firstName={?}&lastName={?}", "Jacob", "Boyd"))
-				.andExpect(status().isOk());
-
+		mockMvc.perform(MockMvcRequestBuilders.get("/personInfo?firstName={Jacob}&lastName={Boyd}", "Jacob" , "Boyd"))
+		.andExpect(status().isOk());
 	}
 
 	@Test
