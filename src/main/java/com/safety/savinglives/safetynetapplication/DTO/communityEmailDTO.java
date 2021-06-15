@@ -1,14 +1,14 @@
 package com.safety.savinglives.safetynetapplication.DTO;
 
-public class CommunityEmailDTO {
+public class communityEmailDTO {
 
 	private String email;
 
-	public CommunityEmailDTO() {
+	public communityEmailDTO() {
 		super();
 	}
 
-	public CommunityEmailDTO(String email) {
+	public communityEmailDTO(String email) {
 		super();
 		this.email = email;
 	}

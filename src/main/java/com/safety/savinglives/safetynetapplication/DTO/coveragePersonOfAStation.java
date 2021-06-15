@@ -1,6 +1,6 @@
 package com.safety.savinglives.safetynetapplication.DTO;
 
-public class CoveragePersonOfAStation {
+public class coveragePersonOfAStation {
 
 	private String stationnumber;
 	private String name;
@@ -8,7 +8,7 @@ public class CoveragePersonOfAStation {
 	private String adress;
 	private String phoneNumber;
 
-	public CoveragePersonOfAStation(String stationnumber, String name, String lastName, String adress,
+	public coveragePersonOfAStation(String stationnumber, String name, String lastName, String adress,
 			String phoneNumber) {
 		super();
 		this.stationnumber = stationnumber;

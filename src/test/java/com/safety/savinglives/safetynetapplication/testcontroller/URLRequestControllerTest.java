@@ -18,15 +18,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.safety.savinglives.safetynetapplication.DTO.ChildAlertDTO;
-import com.safety.savinglives.safetynetapplication.DTO.ChildInHouseAlertDTO;
-import com.safety.savinglives.safetynetapplication.DTO.CommunityEmailDTO;
-import com.safety.savinglives.safetynetapplication.DTO.FireDTO;
-import com.safety.savinglives.safetynetapplication.DTO.FireStationDTO;
-import com.safety.savinglives.safetynetapplication.DTO.FireStationGeneralDTO;
-import com.safety.savinglives.safetynetapplication.DTO.FloodDTO;
-import com.safety.savinglives.safetynetapplication.DTO.PersonInfoDTO;
-import com.safety.savinglives.safetynetapplication.DTO.PhoneAlertDTO;
+import com.safety.savinglives.safetynetapplication.DTO.childAlertDTO;
+import com.safety.savinglives.safetynetapplication.DTO.childInHouseAlertDTO;
+import com.safety.savinglives.safetynetapplication.DTO.communityEmailDTO;
+import com.safety.savinglives.safetynetapplication.DTO.fireDTO;
+import com.safety.savinglives.safetynetapplication.DTO.fireStationDTO;
+import com.safety.savinglives.safetynetapplication.DTO.fireStationGeneralDTO;
+import com.safety.savinglives.safetynetapplication.DTO.floodDTO;
+import com.safety.savinglives.safetynetapplication.DTO.personInfoDTO;
+import com.safety.savinglives.safetynetapplication.DTO.phoneAlertDTO;
 import com.safety.savinglives.safetynetapplication.controller.URLRequestController;
 import com.safety.savinglives.safetynetapplication.model.Person;
 import com.safety.savinglives.safetynetapplication.service.URLService;
@@ -48,7 +48,7 @@ class URLRequestControllerTest {
 	@Test
 	public void testListOfChildLivingInTheAdress_ShouldReturn404_WhenAdressDoesNotContainChildren() throws Exception {
 
-		ChildAlertDTO testItem = new ChildAlertDTO(new ArrayList<ChildInHouseAlertDTO>(), new ArrayList<Person>());
+		childAlertDTO testItem = new childAlertDTO(new ArrayList<childInHouseAlertDTO>(), new ArrayList<Person>());
 		when(urlService.getListOfChildBasedOnAddress("32 rue du chemin")).thenReturn(testItem);
 		urlcontroller.setUrlService(urlService);
 
@@ -60,12 +60,12 @@ class URLRequestControllerTest {
 	@Test
 	public void testListOfChildLivingInTheAdress_ShouldReturn200_WhenAdressDoContainChildren() throws Exception {
 
-		ChildInHouseAlertDTO childHouse = new ChildInHouseAlertDTO("Sophie", "Lecomte", "6");
-		ArrayList<ChildInHouseAlertDTO> childenInHouse = new ArrayList<>();
+		childInHouseAlertDTO childHouse = new childInHouseAlertDTO("Sophie", "Lecomte", "6");
+		ArrayList<childInHouseAlertDTO> childenInHouse = new ArrayList<>();
 		childenInHouse.add(childHouse);
 		ArrayList<Person> adultInHouse = new ArrayList<>();
 
-		ChildAlertDTO testItem = new ChildAlertDTO(childenInHouse, adultInHouse);
+		childAlertDTO testItem = new childAlertDTO(childenInHouse, adultInHouse);
 
 		when(urlService.getListOfChildBasedOnAddress("32 rue du chemin")).thenReturn(testItem);
 		urlcontroller.setUrlService(urlService);
@@ -78,13 +78,13 @@ class URLRequestControllerTest {
 	@Test
 	public void testListCoverageByStationNumber_shouldRetrun200_WhenValueExistInJson() throws Exception {
 
-		FireStationDTO itemA = new FireStationDTO("Alex", "Osselin", "32 rue du chemin", "888-888-888");
-		FireStationDTO itemB = new FireStationDTO("Sophie", "Lecomte", "78 bis avenue de la lumière", "888-789-888");
-		List<FireStationDTO> listing = new ArrayList<FireStationDTO>();
+		fireStationDTO itemA = new fireStationDTO("Alex", "Osselin", "32 rue du chemin", "888-888-888");
+		fireStationDTO itemB = new fireStationDTO("Sophie", "Lecomte", "78 bis avenue de la lumière", "888-789-888");
+		List<fireStationDTO> listing = new ArrayList<fireStationDTO>();
 		listing.add(itemA);
 		listing.add(itemB);
 
-		FireStationGeneralDTO testItem = new FireStationGeneralDTO(listing, 1, 1);
+		fireStationGeneralDTO testItem = new fireStationGeneralDTO(listing, 1, 1);
 
 		when(urlService.getListOfPeopleCoveredByFireStation("1")).thenReturn(testItem);
 		urlcontroller.setUrlService(urlService);
@@ -97,9 +97,9 @@ class URLRequestControllerTest {
 	@Test
 	public void testListOfListCoverageByStationNumber_shouldRetrun404_WhenValueDoesNotExistInJson() throws Exception {
 
-		List<FireStationDTO> listing = new ArrayList<FireStationDTO>();
+		List<fireStationDTO> listing = new ArrayList<fireStationDTO>();
 
-		FireStationGeneralDTO testItem = new FireStationGeneralDTO(listing, 0, 0);
+		fireStationGeneralDTO testItem = new fireStationGeneralDTO(listing, 0, 0);
 
 		when(urlService.getListOfPeopleCoveredByFireStation("1")).thenReturn(testItem);
 		urlcontroller.setUrlService(urlService);
@@ -113,7 +113,7 @@ class URLRequestControllerTest {
 	public void testGetTheListOfPhoneNumberOfPeopleLivingCloseToTheFireStation_ShouldReturn404_WhenFireStationDoesNotExist()
 			throws Exception {
 
-		ArrayList<PhoneAlertDTO> testItem = new ArrayList<>();
+		ArrayList<phoneAlertDTO> testItem = new ArrayList<>();
 		when(urlService.getListOfPhoneNumberOfPeopleLivingCloseToTheFireStation("2")).thenReturn(testItem);
 		urlcontroller.setUrlService(urlService);
 
@@ -126,10 +126,10 @@ class URLRequestControllerTest {
 	public void testGetTheListOfPhoneNumberOfPeopleLivingCloseToTheFireStation_ShouldReturn200_WhenFireStationExist()
 			throws Exception {
 
-		PhoneAlertDTO phoneAlerta = new PhoneAlertDTO("888-888-888");
-		PhoneAlertDTO phoneAlertb = new PhoneAlertDTO("765-888-888");
+		phoneAlertDTO phoneAlerta = new phoneAlertDTO("888-888-888");
+		phoneAlertDTO phoneAlertb = new phoneAlertDTO("765-888-888");
 
-		ArrayList<PhoneAlertDTO> testItem = new ArrayList<>();
+		ArrayList<phoneAlertDTO> testItem = new ArrayList<>();
 		testItem.add(phoneAlerta);
 		testItem.add(phoneAlertb);
 
@@ -149,8 +149,8 @@ class URLRequestControllerTest {
 		meds.add("Dolipranne : 200mg");
 		meds.add("Pollen");
 
-		FireDTO expectedItem = new FireDTO("Christine", "Cain", "765-888-888", "13", meds);
-		List<FireDTO> testItem = new ArrayList<>();
+		fireDTO expectedItem = new fireDTO("Christine", "Cain", "765-888-888", "13", meds);
+		List<fireDTO> testItem = new ArrayList<>();
 		testItem.add(expectedItem);
 
 		when(urlService.getListOfInhabitantAndPhoneNumberOfFireStationCloseBy("rue lumière")).thenReturn(testItem);
@@ -164,7 +164,7 @@ class URLRequestControllerTest {
 	@Test
 	public void testGetListOfInhabitantAndPhoneNumberOfFireStationCloseBy_ShouldReturn404_WhenAddressOfPersonDoesNOTExist()
 			throws Exception {
-		List<FireDTO> testItem = new ArrayList<>();
+		List<fireDTO> testItem = new ArrayList<>();
 
 		when(urlService.getListOfInhabitantAndPhoneNumberOfFireStationCloseBy("rue lumière")).thenReturn(testItem);
 		urlcontroller.setUrlService(urlService);
@@ -173,7 +173,6 @@ class URLRequestControllerTest {
 				.andExpect(status().isNotFound());
 
 	}
-
 
 	@Test
 	public void testGetListOfAllAddressProtectedByTheFireStation_ShouldReturn404_WhenListIsIncorrect()
@@ -187,17 +186,15 @@ class URLRequestControllerTest {
 		List<String> idstation = new ArrayList<>();
 		idstation.add("1");
 		idstation.add("2");
-		List<FloodDTO> TestItem = new ArrayList<>();
+		List<floodDTO> TestItem = new ArrayList<>();
 
-		when(urlService.getListOfAllAddressProtectedByTheFireStation(idstation))
-				.thenReturn(TestItem);
+		when(urlService.getListOfAllAddressProtectedByTheFireStation(idstation)).thenReturn(TestItem);
 		urlcontroller.setUrlService(urlService);
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/flood/stations?stations={stations}", "1,2"))
 				.andExpect(status().isNotFound());
 
 	}
-
 
 	@Test
 	public void testGetListOfAllAddressProtectedByTheFireStation_ShouldReturn200_WhenListIsCorrect() throws Exception {
@@ -206,10 +203,10 @@ class URLRequestControllerTest {
 		meds.add("Dolipranne : 200mg");
 		meds.add("Pollen");
 
-		FloodDTO itemA = new FloodDTO("32 rue du chemin", "Alex", "Osselin", "888-888-888", "25", meds);
-		FloodDTO itemB = new FloodDTO("78 bis avenue de la lumière", "Sophie", "Lecomte", "888-789-888", "6", meds);
+		floodDTO itemA = new floodDTO("32 rue du chemin", "Alex", "Osselin", "888-888-888", "25", meds);
+		floodDTO itemB = new floodDTO("78 bis avenue de la lumière", "Sophie", "Lecomte", "888-789-888", "6", meds);
 
-		List<FloodDTO> TestItem = new ArrayList<>();
+		List<floodDTO> TestItem = new ArrayList<>();
 		TestItem.add(itemA);
 		TestItem.add(itemB);
 
@@ -228,7 +225,7 @@ class URLRequestControllerTest {
 	@Test
 	public void testgetMedicalInformationOfPeople_ShouldReturn404_WhenPersonDoesNotExist() throws Exception {
 
-		List<PersonInfoDTO> testItem = new ArrayList<>();
+		List<personInfoDTO> testItem = new ArrayList<>();
 
 		when(urlService.getMedicalInformationOfPeople("Alex", "Osselin")).thenReturn(testItem);
 		urlcontroller.setUrlService(urlService);
@@ -244,9 +241,9 @@ class URLRequestControllerTest {
 		meds.add("Dolipranne : 200mg");
 		meds.add("Pollen");
 
-		PersonInfoDTO itema = new PersonInfoDTO("Osselin", "Alex", "32 rue du chemin", "25", "codeurjava@gmail.com",
+		personInfoDTO itema = new personInfoDTO("Osselin", "Alex", "32 rue du chemin", "25", "codeurjava@gmail.com",
 				meds);
-		List<PersonInfoDTO> testItem = new ArrayList<>();
+		List<personInfoDTO> testItem = new ArrayList<>();
 		testItem.add(itema);
 
 		when(urlService.getMedicalInformationOfPeople("Alex", "Osselin")).thenReturn(testItem);
@@ -259,7 +256,7 @@ class URLRequestControllerTest {
 	@Test
 	public void testGetAllEmailFromAllInhabitantOfCity_ShouldReturn404_WhenCityIsInccorect() throws Exception {
 
-		List<CommunityEmailDTO> testItem = new ArrayList<>();
+		List<communityEmailDTO> testItem = new ArrayList<>();
 
 		when(urlService.getAllEmailFromAllInhabitantOfCity("Paris")).thenReturn(testItem);
 		urlcontroller.setUrlService(urlService);
@@ -272,12 +269,12 @@ class URLRequestControllerTest {
 	@Test
 	public void testGetAllEmailFromAllInhabitantOfCity_ShouldReturn200_WhenCityExistInJson() throws Exception {
 
-		CommunityEmailDTO itemA = new CommunityEmailDTO("codeurjava@gmail.com");
-		CommunityEmailDTO itemB = new CommunityEmailDTO("bernard.arnaud@lvmh.com");
-		CommunityEmailDTO itemC = new CommunityEmailDTO("sophie.Lecomte@gmail.com");
-		CommunityEmailDTO itemD = new CommunityEmailDTO("cain.cain@gmail.com");
+		communityEmailDTO itemA = new communityEmailDTO("codeurjava@gmail.com");
+		communityEmailDTO itemB = new communityEmailDTO("bernard.arnaud@lvmh.com");
+		communityEmailDTO itemC = new communityEmailDTO("sophie.Lecomte@gmail.com");
+		communityEmailDTO itemD = new communityEmailDTO("cain.cain@gmail.com");
 
-		List<CommunityEmailDTO> testItem = new ArrayList<>();
+		List<communityEmailDTO> testItem = new ArrayList<>();
 		testItem.add(itemA);
 		testItem.add(itemB);
 		testItem.add(itemC);

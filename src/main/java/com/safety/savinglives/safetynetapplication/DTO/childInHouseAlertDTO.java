@@ -4,13 +4,13 @@ import java.util.List;
 
 import com.safety.savinglives.safetynetapplication.model.Person;
 
-public class ChildInHouseAlertDTO {
+public class childInHouseAlertDTO {
 
 	private String firstName;
 	private String lastName;
 	private String age;
 
-	public ChildInHouseAlertDTO(String firstName, String lastName, String age) {
+	public childInHouseAlertDTO(String firstName, String lastName, String age) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -18,7 +18,7 @@ public class ChildInHouseAlertDTO {
 
 	}
 
-	public ChildInHouseAlertDTO() {
+	public childInHouseAlertDTO() {
 		super();
 	}
 

@@ -2,7 +2,7 @@ package com.safety.savinglives.safetynetapplication.DTO;
 
 import java.util.List;
 
-public class FireDTO {
+public class fireDTO {
 
 	private String name;
 	private String lastName;
@@ -10,11 +10,11 @@ public class FireDTO {
 	private String age;
 	private List<String> medRecords;
 
-	public FireDTO() {
+	public fireDTO() {
 		super();
 	}
 
-	public FireDTO( String name, String lastName, String phoneNumber, String age, List<String> medRecords) {
+	public fireDTO(String name, String lastName, String phoneNumber, String age, List<String> medRecords) {
 		super();
 
 		this.name = name;
@@ -31,9 +31,6 @@ public class FireDTO {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
-	
 
 	public String getLastName() {
 		return lastName;
@@ -69,18 +66,15 @@ public class FireDTO {
 
 	@Override
 	public int hashCode() {
-		
+
 		int finalHash = 0;
-		
-		for(String s : medRecords) {
-			
+
+		for (String s : medRecords) {
+
 			finalHash += s.hashCode();
 		}
-		
-		
+
 		return name.hashCode() + lastName.hashCode() + age.hashCode() + phoneNumber.hashCode() + finalHash;
 	}
-	
-	
 
 }

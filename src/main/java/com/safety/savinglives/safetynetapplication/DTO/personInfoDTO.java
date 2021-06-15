@@ -2,7 +2,7 @@ package com.safety.savinglives.safetynetapplication.DTO;
 
 import java.util.List;
 
-public class PersonInfoDTO {
+public class personInfoDTO {
 
 	private String lastName;
 	private String name;
@@ -11,11 +11,11 @@ public class PersonInfoDTO {
 	private String eMail;
 	private List<String> medRecords;
 
-	public PersonInfoDTO() {
+	public personInfoDTO() {
 		super();
 	}
 
-	public PersonInfoDTO(String lastName, String name, String address, String age, String eMail,
+	public personInfoDTO(String lastName, String name, String address, String age, String eMail,
 			List<String> medRecords) {
 		super();
 		this.name = name;

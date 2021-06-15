@@ -1,17 +1,17 @@
 package com.safety.savinglives.safetynetapplication.DTO;
 
-public class FireStationDTO {
+public class fireStationDTO {
 
 	private String firstName;
 	private String lastName;
 	private String address;
 	private String number;
 
-	public FireStationDTO() {
+	public fireStationDTO() {
 		super();
 	}
 
-	public FireStationDTO(String firstName, String name, String address, String number) {
+	public fireStationDTO(String firstName, String name, String address, String number) {
 		super();
 		this.firstName = firstName;
 		this.lastName = name;

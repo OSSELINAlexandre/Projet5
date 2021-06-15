@@ -4,26 +4,26 @@ import java.util.List;
 
 import com.safety.savinglives.safetynetapplication.model.Person;
 
-public class ChildAlertDTO {
+public class childAlertDTO {
 
-	private List<ChildInHouseAlertDTO> childInTheHouse;
+	private List<childInHouseAlertDTO> childInTheHouse;
 	private List<Person> AdultInTheHouse;
 
-	public ChildAlertDTO(List<ChildInHouseAlertDTO> childInTheHouse, List<Person> adultInTheHouse) {
+	public childAlertDTO(List<childInHouseAlertDTO> childInTheHouse, List<Person> adultInTheHouse) {
 		super();
 		this.childInTheHouse = childInTheHouse;
 		AdultInTheHouse = adultInTheHouse;
 	}
 
-	public ChildAlertDTO() {
+	public childAlertDTO() {
 		super();
 	}
 
-	public List<ChildInHouseAlertDTO> getChildInTheHouse() {
+	public List<childInHouseAlertDTO> getChildInTheHouse() {
 		return childInTheHouse;
 	}
 
-	public void setChildInTheHouse(List<ChildInHouseAlertDTO> childInTheHouse) {
+	public void setChildInTheHouse(List<childInHouseAlertDTO> childInTheHouse) {
 		this.childInTheHouse = childInTheHouse;
 	}
 
@@ -38,7 +38,7 @@ public class ChildAlertDTO {
 	@Override
 	public boolean equals(Object obj) {
 
-		if (obj instanceof ChildAlertDTO) {
+		if (obj instanceof childAlertDTO) {
 
 			return this.hashCode() == obj.hashCode();
 
@@ -52,7 +52,7 @@ public class ChildAlertDTO {
 
 		int finalHash = 0;
 
-		for (ChildInHouseAlertDTO cad : childInTheHouse) {
+		for (childInHouseAlertDTO cad : childInTheHouse) {
 
 			finalHash += cad.hashCode();
 
