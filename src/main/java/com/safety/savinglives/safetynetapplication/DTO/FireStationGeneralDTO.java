@@ -59,4 +59,20 @@ public class FireStationGeneralDTO {
 		return hashCodeFinal;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof FireStationGeneralDTO) {
+			
+			FireStationGeneralDTO itemCompare = (FireStationGeneralDTO) obj;
+			
+			return (itemCompare.getAdultCount() == this.adultCount) && (itemCompare.getChildCount() == this.getChildCount()) &&(itemCompare.getCoveredCitizens().hashCode() == this.getCoveredCitizens().hashCode());
+			
+		}
+		return super.equals(obj);
+	}
+	
+	
+	
+	
+
 }

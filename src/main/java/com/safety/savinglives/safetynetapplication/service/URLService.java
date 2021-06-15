@@ -359,4 +359,29 @@ public class URLService {
 
 	}
 
+	public PersonRepository getPersonRepository() {
+		return personRepository;
+	}
+
+	public void setPersonRepository(PersonRepository personRepository) {
+		this.personRepository = personRepository;
+	}
+
+	public FireStationRepository getFireStationRepository() {
+		return fireStationRepository;
+	}
+
+	public void setFireStationRepository(FireStationRepository fireStationRepository) {
+		this.fireStationRepository = fireStationRepository;
+	}
+
+	public MedicalRecordRepository getMedicalRecordRepository() {
+		return medicalRecordRepository;
+	}
+
+	public void setMedicalRecordRepository(MedicalRecordRepository medicalRecordRepository) {
+		this.medicalRecordRepository = medicalRecordRepository;
+	}
+
+
 }

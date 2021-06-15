@@ -51,4 +51,10 @@ public class FireStationDTO {
 		this.number = number;
 	}
 
+	@Override
+	public int hashCode() {
+
+		return firstName.hashCode() + lastName.hashCode() + address.hashCode() + number.hashCode();
+	}
+
 }

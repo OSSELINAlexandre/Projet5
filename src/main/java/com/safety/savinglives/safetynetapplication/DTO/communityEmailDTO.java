@@ -1,9 +1,8 @@
 package com.safety.savinglives.safetynetapplication.DTO;
 
 public class CommunityEmailDTO {
-	
-	private String email;
 
+	private String email;
 
 	public CommunityEmailDTO() {
 		super();
@@ -21,7 +20,11 @@ public class CommunityEmailDTO {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
-	
+
+	@Override
+	public int hashCode() {
+
+		return email.hashCode() + 7789658;
+	}
 
 }

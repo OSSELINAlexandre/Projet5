@@ -67,4 +67,20 @@ public class FireDTO {
 		this.medRecords = medRecords;
 	}
 
+	@Override
+	public int hashCode() {
+		
+		int finalHash = 0;
+		
+		for(String s : medRecords) {
+			
+			finalHash += s.hashCode();
+		}
+		
+		
+		return name.hashCode() + lastName.hashCode() + age.hashCode() + phoneNumber.hashCode() + finalHash;
+	}
+	
+	
+
 }

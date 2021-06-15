@@ -74,4 +74,20 @@ public class FloodDTO {
 		this.medicalRecords = medicalRecords;
 	}
 
+	@Override
+	public int hashCode() {
+
+		int finalHash = 0;
+
+		for (String s : medicalRecords) {
+
+			finalHash += s.hashCode();
+		}
+
+		finalHash += address.hashCode() + name.hashCode() + lastName.hashCode() + phoneNumber.hashCode()
+				+ age.hashCode();
+
+		return finalHash;
+	}
+
 }

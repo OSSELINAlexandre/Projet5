@@ -74,4 +74,18 @@ public class PersonInfoDTO {
 		this.medRecords = medRecords;
 	}
 
+	@Override
+	public int hashCode() {
+
+		int finalHash = 0;
+
+		for (String s : medRecords) {
+
+			finalHash += s.hashCode();
+		}
+
+		return lastName.hashCode() + name.hashCode() + address.hashCode() + age.hashCode() + eMail.hashCode()
+				+ finalHash;
+	}
+
 }

@@ -46,4 +46,13 @@ public class ChildInHouseAlertDTO {
 		this.age = age;
 	}
 
+	@Override
+	public int hashCode() {
+
+		return firstName.hashCode() + lastName.hashCode() + age.hashCode();
+	}
+	
+	
+	
+
 }
