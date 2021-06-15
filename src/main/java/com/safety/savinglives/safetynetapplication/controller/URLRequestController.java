@@ -154,4 +154,15 @@ public class URLRequestController {
 		}
 
 	}
+
+	public URLService getUrlService() {
+		return urlService;
+	}
+
+	public void setUrlService(URLService urlService) {
+		this.urlService = urlService;
+	}
+	
+	
+	
 }

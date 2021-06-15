@@ -1,4 +1,4 @@
-package com.safety.savinglives.safetynetapplication;
+package com.safety.savinglives.safetynetapplication.util;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;

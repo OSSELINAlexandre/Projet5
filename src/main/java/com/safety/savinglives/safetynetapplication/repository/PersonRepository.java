@@ -14,9 +14,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.util.JSONPObject;
-import com.safety.savinglives.safetynetapplication.CustomProperties;
 import com.safety.savinglives.safetynetapplication.model.MedicalRecord;
 import com.safety.savinglives.safetynetapplication.model.Person;
+import com.safety.savinglives.safetynetapplication.util.CustomProperties;
 
 @Component
 public class PersonRepository implements DAOMethods<Person> {

@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.safety.savinglives.safetynetapplication.repository.GeneralDataRepository;
+import com.safety.savinglives.safetynetapplication.util.CustomProperties;
 
 @SpringBootApplication
 public class TestoneofsafetynetApplication implements CommandLineRunner {

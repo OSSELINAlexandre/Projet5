@@ -16,7 +16,7 @@ import org.springframework.boot.json.JsonParser;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safety.savinglives.safetynetapplication.CustomProperties;
+import com.safety.savinglives.safetynetapplication.util.CustomProperties;
 
 @Component
 public class DAOFactory {
