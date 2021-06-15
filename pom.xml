@@ -86,6 +86,9 @@
 							<excludes>
 								<exclude>none</exclude>
 							</excludes>
+							<includes>
+								<include>**/*Test.java</include>
+							</includes>
 						</configuration>
 					</execution>
 				</executions>
