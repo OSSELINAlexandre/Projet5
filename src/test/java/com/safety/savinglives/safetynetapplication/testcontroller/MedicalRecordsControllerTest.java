@@ -1,6 +1,8 @@
 package com.safety.savinglives.safetynetapplication.testcontroller;
 
+import static org.hamcrest.CoreMatchers.any;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -9,6 +11,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,9 +20,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.safety.savinglives.safetynetapplication.controller.FireStationController;
+import com.safety.savinglives.safetynetapplication.controller.MedicalRecordsController;
 import com.safety.savinglives.safetynetapplication.model.FireStation;
 import com.safety.savinglives.safetynetapplication.model.MedicalRecord;
 import com.safety.savinglives.safetynetapplication.model.Person;
+import com.safety.savinglives.safetynetapplication.repository.FireStationRepository;
+import com.safety.savinglives.safetynetapplication.repository.MedicalRecordRepository;
+import com.safety.savinglives.safetynetapplication.service.FireStationService;
+import com.safety.savinglives.safetynetapplication.service.MedicalRecordService;
+import com.safety.savinglives.safetynetapplication.service.URLService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -27,12 +37,29 @@ class MedicalRecordsControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
+	
+	@Mock
+	private URLService urlService;
 
+	@Mock
+	private MedicalRecordService medicalrecordservice;
+
+	@Autowired
+	private MedicalRecordsController medicalrecordcontroller;
+	
+	@Mock
+	private MedicalRecordRepository medicalrecordrepo;
 
 	@Test
 	public void testdeleteMedicalRecord_Shouldsend404_WhenMedcialRecordDoesNotExists() throws Exception {
 
-		mockMvc.perform(MockMvcRequestBuilders.delete("/medicalrecords/{firstName}/{thelastName}", "Alex","Osselin"))
+		
+		when(medicalrecordservice.deleteAMedicalFile("Alex", "Osselin")).thenReturn(false);
+		
+		medicalrecordcontroller.setMedicalRecordService(medicalrecordservice);
+		
+		
+		mockMvc.perform(MockMvcRequestBuilders.delete("/medicalrecords/{firstName}/{thelastName}", "Alex", "Osselin"))
 				.andExpect(status().isNotFound());
 
 	}
@@ -40,42 +67,45 @@ class MedicalRecordsControllerTest {
 	@Test
 	public void testdeleteMedcialRecord_Shouldsend200_WhenMedcialRecordExists() throws Exception {
 
-		mockMvc.perform(MockMvcRequestBuilders.delete("/medicalrecords/{firstName}/{thelastName}", "Felicia" ,"Boyd"))
+		
+		when(medicalrecordservice.deleteAMedicalFile("Alex", "Osselin")).thenReturn(true);
+		medicalrecordcontroller.setMedicalRecordService(medicalrecordservice);
+
+
+		mockMvc.perform(MockMvcRequestBuilders.delete("/medicalrecords/{firstName}/{thelastName}", "Alex", "Osselin"))
 				.andExpect(status().isOk());
 
 	}
 
 	@Test
-	public void testpostANewMedicalRecord_ShouldSend404_ifIsNOTOfClassMedicalRecord() throws Exception {
+	public void testpostANewMedicalRecord_ShouldSend400_ifIsNOTOfClassMedicalRecord() throws Exception {
 
-		mockMvc.perform(MockMvcRequestBuilders.post("/medicalrecords").content(asJsonString("AlexOSSELIN"))
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/medicalrecords").content(asJsonString("nogoodform"))
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().is(400));
 	}
-	
-	
+
 	@Test
 	public void testpostANewMedicalRecord_ShouldSend200_ifIsOfClassMedicalRecord() throws Exception {
 
-		List<String> MockString = new ArrayList<>();
-		MockString.add("QUEDALLE");
-		MockString.add("RIEN");
-		mockMvc.perform(MockMvcRequestBuilders.post("/medicalrecords")
-				.content(asJsonString(new MedicalRecord("Alexandre", "OSSELIN", "15/20/65", MockString, MockString)))
+
+		
+		mockMvc.perform(MockMvcRequestBuilders.post("/medicalrecords").content(asJsonString(new MedicalRecord()))
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 	}
-
 
 	@Test
 	public void testUpdateAMedicalRecord_Shouldsend200_WhenMedicalRecordExistInJson() throws Exception {
 
-		List<String> test = new ArrayList<>();
-		test.add("YES");
-		test.add("YESYES");
-		mockMvc.perform(MockMvcRequestBuilders.put("/medicalrecords")
-				.content(asJsonString(new MedicalRecord("John", "Boyd", "YES", test, test)))
-				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().is(200));
+		MedicalRecord testItem = new MedicalRecord();
+		MedicalRecord testSecondItem = new MedicalRecord();
+		when(medicalrecordservice.updateAMedicalFile(testItem)).thenReturn(testItem);
+		medicalrecordcontroller.setMedicalRecordService(medicalrecordservice);
+
+		
+		mockMvc.perform(MockMvcRequestBuilders.post("/medicalrecords").content(asJsonString(testItem))
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 
 	}
 
@@ -85,10 +115,13 @@ class MedicalRecordsControllerTest {
 		List<String> test = new ArrayList<>();
 		test.add("YES");
 		test.add("YESYES");
-		mockMvc.perform(MockMvcRequestBuilders.put("/medicalrecords")
-				.content(asJsonString(new MedicalRecord("LOL", "LOL", "YES", test, test)))
-				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().is(404));
+		MedicalRecord testItem = new MedicalRecord("Alexandre", "OSSELIN", "06/11/1995", test, test);
+		when(medicalrecordservice.updateAMedicalFile(testItem)).thenReturn(null);
+		medicalrecordcontroller.setMedicalRecordService(medicalrecordservice);
+
+		
+		mockMvc.perform(MockMvcRequestBuilders.post("/medicalrecords").content(asJsonString(testItem))
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
 
 	}
 
@@ -99,5 +132,5 @@ class MedicalRecordsControllerTest {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 }

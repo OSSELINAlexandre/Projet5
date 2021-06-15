@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.safety.savinglives.safetynetapplication.model.MedicalRecord;
 import com.safety.savinglives.safetynetapplication.model.Person;
 import com.safety.savinglives.safetynetapplication.service.MedicalRecordService;
+import com.safety.savinglives.safetynetapplication.service.URLService;
 
 @RestController
 public class MedicalRecordsController {
@@ -25,16 +26,19 @@ public class MedicalRecordsController {
 
 	@Autowired
 	MedicalRecordService medicalRecordService;
+	
+	@Autowired
+	URLService urlService;
 
 	@GetMapping(value = "/medicalrecords")
 	public ResponseEntity<Iterable<MedicalRecord>> getAllRecords() {
 
 		Iterable<MedicalRecord> result = medicalRecordService.getAllMedicalRecords();
-		if (result != null) {
-			logger.info("Successfully return a satisfying result for GET /medicalrecords ");
+		if (result == null) {
+			logger.error("COULD NOT return a satisfying result for GET /medicalrecords ");
 			return ResponseEntity.notFound().build();
 		} else {
-			logger.error("COULD NOT return a satisfying result for GET /medicalrecords ");
+			logger.info("Successfully return a satisfying result for GET /medicalrecords ");
 			return ResponseEntity.ok().body(result);
 		}
 
@@ -94,4 +98,23 @@ public class MedicalRecordsController {
 		}
 	}
 
+	public URLService getUrlService() {
+		return urlService;
+	}
+
+	public void setUrlService(URLService urlService) {
+		this.urlService = urlService;
+	}
+
+	public MedicalRecordService getMedicalRecordService() {
+		return medicalRecordService;
+	}
+
+	public void setMedicalRecordService(MedicalRecordService medicalRecordService) {
+		this.medicalRecordService = medicalRecordService;
+	}
+	
+	
+
+	
 }

@@ -55,6 +55,5 @@ public class MedicalRecordService {
 			}
 		}
 		return null;
-/// I changed the return method to null, check if that's working ! :)
 	}
 }
