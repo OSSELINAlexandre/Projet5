@@ -314,9 +314,15 @@ public class URLService {
 		ArrayList<CommunityEmailDTO> emailsOfCityInhabitants = new ArrayList<>();
 		Boolean mailIsExisting = false;
 
-		for (Person p : personRepository.getAllData()) {
 
-			if (p.getCity().equals(city)) {
+		logger.info("MMMMMMMMMMMMMMMMMMMMMMMMMM " + city);
+
+		
+		for (Person p : personRepository.getAllData()) {
+			logger.info("Hey bro what ? " + (p.getCity().equals(city)) + "quand bien même " + city.hashCode() + "|" + p.getCity().hashCode()	 );
+			
+			if (p.getCity() == city) {
+				logger.info("LET see THE WTFFF? " + p.getCity() + " should be equal to " + city);
 
 				CommunityEmailDTO newItem = new CommunityEmailDTO(p.getEmail());
 

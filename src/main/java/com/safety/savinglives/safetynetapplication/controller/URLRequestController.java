@@ -144,6 +144,7 @@ public class URLRequestController {
 			@RequestParam(name = "city", required = true) String city) {
 
 		List<CommunityEmailDTO> result = urlService.getAllEmailFromAllInhabitantOfCity(city);
+		logger.info("WUTTTTTTTTTTTTTTTTTTTTTTTT " + city);
 
 		if (!result.isEmpty()) {
 			logger.info("Successfully return a satisfying result with call GET /communityEmail?city={city} with city= " + city);
