@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safety.savinglives.safetynetapplication.DTO.fireDTO;
+import com.safety.savinglives.safetynetapplication.DTO.firePersonDTO;
 import com.safety.savinglives.safetynetapplication.DTO.fireStationDTO;
 import com.safety.savinglives.safetynetapplication.DTO.fireStationGeneralDTO;
 import com.safety.savinglives.safetynetapplication.DTO.floodDTO;
@@ -49,7 +50,7 @@ class FireStationControllerTest {
 
 	@Autowired
 	private FireStationController firestationcontroller;
-	
+
 	@Mock
 	private FireStationRepository firestationrepo;
 
@@ -75,7 +76,7 @@ class FireStationControllerTest {
 	}
 
 	@Test
-	public void testpostANewFireStation_ShouldSend404_ifIsNotOfClassFireStation() throws Exception {
+	public void testpostANewFireStation_ShouldSend400_ifIsNotOfClassFireStation() throws Exception {
 
 		mockMvc.perform(MockMvcRequestBuilders.post("/firestation").content(asJsonString("Alex"))
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
@@ -193,9 +194,10 @@ class FireStationControllerTest {
 		meds.add("Dolipranne : 200mg");
 		meds.add("Pollen");
 
-		fireDTO expectedItem = new fireDTO("Christine", "Cain", "765-888-888", "13", meds);
-		List<fireDTO> testItem = new ArrayList<>();
-		testItem.add(expectedItem);
+		firePersonDTO expectedItem = new firePersonDTO("Christine", "Cain", "765-888-888", "13", meds);
+		List<firePersonDTO> testItemList = new ArrayList<>();
+		testItemList.add(expectedItem);
+		fireDTO testItem = new fireDTO(testItemList, "2");
 
 		when(urlService.getListOfInhabitantAndPhoneNumberOfFireStationCloseBy("rue lumière")).thenReturn(testItem);
 		firestationcontroller.setUrlService(urlService);
@@ -208,8 +210,8 @@ class FireStationControllerTest {
 	@Test
 	public void testGetListOfInhabitantAndPhoneNumberOfFireStationCloseBy_ShouldReturn404_WhenAddressOfPersonDoesNOTExist()
 			throws Exception {
-		List<fireDTO> testItem = new ArrayList<>();
-
+		List<firePersonDTO> testItemList = new ArrayList<>();
+		fireDTO testItem = new fireDTO(testItemList, "");
 		when(urlService.getListOfInhabitantAndPhoneNumberOfFireStationCloseBy("rue lumière")).thenReturn(testItem);
 		firestationcontroller.setUrlService(urlService);
 

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safety.savinglives.safetynetapplication.DTO.fireDTO;
+import com.safety.savinglives.safetynetapplication.DTO.firePersonDTO;
 import com.safety.savinglives.safetynetapplication.DTO.fireStationGeneralDTO;
 import com.safety.savinglives.safetynetapplication.DTO.floodDTO;
 import com.safety.savinglives.safetynetapplication.DTO.phoneAlertDTO;
@@ -32,7 +33,7 @@ public class FireStationController {
 
 	@Autowired
 	FireStationService fireStationService;
-	
+
 	@Autowired
 	URLService urlService;
 
@@ -85,7 +86,7 @@ public class FireStationController {
 		}
 
 	}
-	
+
 	@GetMapping(value = "/firestation")
 	public ResponseEntity getTheThing(@RequestParam(name = "stationNumber", required = false) String id) {
 
@@ -103,7 +104,7 @@ public class FireStationController {
 		}
 
 	}
-	
+
 	@GetMapping(value = "/phoneAlert")
 	public ResponseEntity<Iterable<phoneAlertDTO>> getTheListOfPhoneNumberOfPeopleLivingCloseToTheFireStation(
 			@RequestParam(name = "firestation", required = true) String firestation_number) {
@@ -123,14 +124,13 @@ public class FireStationController {
 		}
 	}
 
-	
 	@GetMapping(value = "/fire")
-	public ResponseEntity<Iterable<fireDTO>> getListOfInhabitantAndPhoneNumberOfFireStationCloseBy(
+	public ResponseEntity<fireDTO> getListOfInhabitantAndPhoneNumberOfFireStationCloseBy(
 			@RequestParam(name = "address", required = true) String address) {
 
-		List<fireDTO> result = urlService.getListOfInhabitantAndPhoneNumberOfFireStationCloseBy(address);
+		fireDTO result = urlService.getListOfInhabitantAndPhoneNumberOfFireStationCloseBy(address);
 
-		if (!result.isEmpty()) {
+		if (!result.getCitizenLivingAtTheAddress().isEmpty()) {
 			logger.info("Successfully return a satisfying result with call GET /fire?address={address} with address= "
 					+ address);
 			return ResponseEntity.ok().body(result);
@@ -140,7 +140,7 @@ public class FireStationController {
 		}
 
 	}
-	
+
 	@GetMapping(value = "/flood/stations")
 	public ResponseEntity<Iterable<floodDTO>> getListOfAllAddressProtectedByTheFireStation(
 			@RequestParam(name = "stations", required = true) List<String> IDStation) {
@@ -159,7 +159,6 @@ public class FireStationController {
 		}
 	}
 
-	
 	public URLService getUrlService() {
 		return urlService;
 	}
@@ -175,7 +174,5 @@ public class FireStationController {
 	public void setFireStationService(FireStationService fireStationService) {
 		this.fireStationService = fireStationService;
 	}
-	
-	
-	
+
 }

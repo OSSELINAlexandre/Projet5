@@ -20,6 +20,7 @@ import com.safety.savinglives.safetynetapplication.DTO.childAlertDTO;
 import com.safety.savinglives.safetynetapplication.DTO.childInHouseAlertDTO;
 import com.safety.savinglives.safetynetapplication.DTO.communityEmailDTO;
 import com.safety.savinglives.safetynetapplication.DTO.fireDTO;
+import com.safety.savinglives.safetynetapplication.DTO.firePersonDTO;
 import com.safety.savinglives.safetynetapplication.DTO.fireStationDTO;
 import com.safety.savinglives.safetynetapplication.DTO.fireStationGeneralDTO;
 import com.safety.savinglives.safetynetapplication.DTO.floodDTO;
@@ -156,10 +157,11 @@ class URLServiceTest {
 		meds.add("Dolipranne : 200mg");
 		meds.add("Pollen");
 
-		fireDTO expectedItem = new fireDTO("Christine", "Cain", "765-888-888", "13", meds);
-		List<fireDTO> expected = new ArrayList<>();
-		expected.add(expectedItem);
-		List<fireDTO> actual = urlservice.getListOfInhabitantAndPhoneNumberOfFireStationCloseBy("Rue général lousin");
+		firePersonDTO expectedItem = new firePersonDTO("Christine", "Cain", "765-888-888", "13", meds);
+		List<firePersonDTO> expectedList = new ArrayList<>();
+		expectedList.add(expectedItem);
+		fireDTO expected = new fireDTO(expectedList, "2");
+		fireDTO actual = urlservice.getListOfInhabitantAndPhoneNumberOfFireStationCloseBy("Rue général lousin");
 
 		assertEquals(expected.hashCode(), actual.hashCode());
 	}

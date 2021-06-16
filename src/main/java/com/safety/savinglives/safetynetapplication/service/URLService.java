@@ -17,6 +17,7 @@ import com.safety.savinglives.safetynetapplication.DTO.childAlertDTO;
 import com.safety.savinglives.safetynetapplication.DTO.childInHouseAlertDTO;
 import com.safety.savinglives.safetynetapplication.DTO.communityEmailDTO;
 import com.safety.savinglives.safetynetapplication.DTO.fireDTO;
+import com.safety.savinglives.safetynetapplication.DTO.firePersonDTO;
 import com.safety.savinglives.safetynetapplication.DTO.fireStationDTO;
 import com.safety.savinglives.safetynetapplication.DTO.fireStationGeneralDTO;
 import com.safety.savinglives.safetynetapplication.DTO.floodDTO;
@@ -136,8 +137,9 @@ public class URLService {
 			}
 
 		}
-
+		
 		childAlertDTO result = new childAlertDTO(livingAtThisAdressUnder18, livingAtThisAdressAbove18);
+
 		return result;
 	}
 
@@ -172,9 +174,9 @@ public class URLService {
 		return listOfPhoneNumber;
 	}
 
-	public List<fireDTO> getListOfInhabitantAndPhoneNumberOfFireStationCloseBy(String address) {
+	public fireDTO getListOfInhabitantAndPhoneNumberOfFireStationCloseBy(String address) {
 
-		List<fireDTO> results = new ArrayList<fireDTO>();
+		List<firePersonDTO> results = new ArrayList<firePersonDTO>();
 
 		for (Person p : personRepository.getAllData()) {
 
@@ -192,8 +194,8 @@ public class URLService {
 						int result = getTheAge(medRec.getBirthdate());
 						;
 
-						fireDTO newItem = new fireDTO(p.getFirstName(), p.getLastName(), p.getPhone(), "" + result,
-								medRecords);
+						firePersonDTO newItem = new firePersonDTO(p.getFirstName(), p.getLastName(), p.getPhone(),
+								"" + result, medRecords);
 						results.add(newItem);
 
 						logger.debug(p.getFirstName() + ", " + p.getLastName() + " is living at the adress " + address
@@ -207,7 +209,18 @@ public class URLService {
 
 		}
 
-		return results;
+		String resultId = new String();
+		for (FireStation s : fireStationRepository.getAllData()) {
+
+			if (s.getAddress().equals(address)) {
+
+				resultId = s.getStation();
+			}
+
+		}
+
+		fireDTO finalResult = new fireDTO(results, resultId);
+		return finalResult;
 	}
 
 	public List<floodDTO> getListOfAllAddressProtectedByTheFireStation(List<String> IDStation) {

@@ -105,16 +105,18 @@ class PersonControllerTest {
 	}
 
 	@Test
-	public void testListOfChildLivingInTheAdress_ShouldReturn404_WhenAdressDoesNotContainChildren() throws Exception {
+	public void testListOfChildLivingInTheAdress_ShouldReturn200_WhenAdressDoesNotContainChildrenEmptyList() throws Exception {
 
 		childAlertDTO testItem = new childAlertDTO(new ArrayList<childInHouseAlertDTO>(), new ArrayList<Person>());
 		when(urlService.getListOfChildBasedOnAddress("32 rue du chemin")).thenReturn(testItem);
 		personcontroller.setUrlService(urlService);
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/childAlert?address={adress}", "32 rue du chemin"))
-				.andExpect(status().isNotFound());
+				.andExpect(status().isOk());
 
 	}
+	
+
 
 	@Test
 	public void testListOfChildLivingInTheAdress_ShouldReturn200_WhenAdressDoContainChildren() throws Exception {

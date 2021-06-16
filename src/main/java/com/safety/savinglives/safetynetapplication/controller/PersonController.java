@@ -103,10 +103,14 @@ public class PersonController {
 		childAlertDTO result = urlService.getListOfChildBasedOnAddress(address);
 		if (result.getChildInTheHouse().isEmpty()) {
 			logger.error("the Call to GET /childAlert with adress " + address + " returned empty List");
-			return ResponseEntity.notFound().build();
-		} else {
+			return ResponseEntity.ok().body(result);
+		} else if(!result.getChildInTheHouse().isEmpty()){
 			logger.info("the Call to GET /childAlert with adress " + address + " returned successfully");
 			return ResponseEntity.ok().body(result);
+		}else {
+			logger.info("the Call to GET /childAlert with adress " + address + "  return null ");
+			return ResponseEntity.notFound().build();
+
 		}
 	}
 	
