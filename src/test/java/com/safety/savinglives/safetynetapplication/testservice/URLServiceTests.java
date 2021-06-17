@@ -16,29 +16,29 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.safety.savinglives.safetynetapplication.DTO.childAlertDTO;
-import com.safety.savinglives.safetynetapplication.DTO.childInHouseAlertDTO;
-import com.safety.savinglives.safetynetapplication.DTO.communityEmailDTO;
-import com.safety.savinglives.safetynetapplication.DTO.fireDTO;
-import com.safety.savinglives.safetynetapplication.DTO.firePersonDTO;
-import com.safety.savinglives.safetynetapplication.DTO.fireStationDTO;
-import com.safety.savinglives.safetynetapplication.DTO.fireStationGeneralDTO;
-import com.safety.savinglives.safetynetapplication.DTO.floodDTO;
-import com.safety.savinglives.safetynetapplication.DTO.personInfoDTO;
-import com.safety.savinglives.safetynetapplication.DTO.phoneAlertDTO;
+import com.safety.savinglives.safetynetapplication.DTO.ChildAlertDTO;
+import com.safety.savinglives.safetynetapplication.DTO.ChildInHouseAlertDTO;
+import com.safety.savinglives.safetynetapplication.DTO.CommunityEmailDTO;
+import com.safety.savinglives.safetynetapplication.DTO.FireDTO;
+import com.safety.savinglives.safetynetapplication.DTO.FirePersonDTO;
+import com.safety.savinglives.safetynetapplication.DTO.FireStationDTO;
+import com.safety.savinglives.safetynetapplication.DTO.FireStationGeneralDTO;
+import com.safety.savinglives.safetynetapplication.DTO.FloodDTO;
+import com.safety.savinglives.safetynetapplication.DTO.PersonInfoDTO;
+import com.safety.savinglives.safetynetapplication.DTO.PhoneAlertDTO;
 import com.safety.savinglives.safetynetapplication.model.FireStation;
 import com.safety.savinglives.safetynetapplication.model.MedicalRecord;
 import com.safety.savinglives.safetynetapplication.model.Person;
 import com.safety.savinglives.safetynetapplication.repository.FireStationRepository;
 import com.safety.savinglives.safetynetapplication.repository.MedicalRecordRepository;
 import com.safety.savinglives.safetynetapplication.repository.PersonRepository;
-import com.safety.savinglives.safetynetapplication.service.MedicalRecordService;
-import com.safety.savinglives.safetynetapplication.service.PersonService;
-import com.safety.savinglives.safetynetapplication.service.URLService;
+import com.safety.savinglives.safetynetapplication.service.MedicalRecordServices;
+import com.safety.savinglives.safetynetapplication.service.PersonServices;
+import com.safety.savinglives.safetynetapplication.service.URLServices;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-class URLServiceTest {
+class URLServiceTests {
 
 	@Mock
 	static FireStationRepository fireStationRepository;
@@ -50,7 +50,7 @@ class URLServiceTest {
 	static PersonRepository personRepository;
 
 	@Autowired
-	URLService urlservice;
+	URLServices urlservice;
 
 	static ArrayList<FireStation> mockUpFireStation = new ArrayList<FireStation>();
 	static ArrayList<Person> mockUpPerson = new ArrayList<Person>();
@@ -92,15 +92,15 @@ class URLServiceTest {
 		urlservice.setPersonRepository(personRepository);
 		urlservice.setMedicalRecordRepository(medicalRecordRepository);
 
-		fireStationDTO itemA = new fireStationDTO("Alex", "Osselin", "32 rue du chemin", "888-888-888");
-		fireStationDTO itemB = new fireStationDTO("Sophie", "Lecomte", "78 bis avenue de la lumière", "888-789-888");
-		List<fireStationDTO> listing = new ArrayList<fireStationDTO>();
+		FireStationDTO itemA = new FireStationDTO("Alex", "Osselin", "32 rue du chemin", "888-888-888");
+		FireStationDTO itemB = new FireStationDTO("Sophie", "Lecomte", "78 bis avenue de la lumière", "888-789-888");
+		List<FireStationDTO> listing = new ArrayList<FireStationDTO>();
 		listing.add(itemA);
 		listing.add(itemB);
 
-		fireStationGeneralDTO expected = new fireStationGeneralDTO(listing, 1, 1);
+		FireStationGeneralDTO expected = new FireStationGeneralDTO(listing, 1, 1);
 
-		fireStationGeneralDTO actual = urlservice.getListOfPeopleCoveredByFireStation("1");
+		FireStationGeneralDTO actual = urlservice.getListOfPeopleCoveredByFireStation("1");
 
 		assertEquals(expected, actual);
 
@@ -114,13 +114,13 @@ class URLServiceTest {
 		urlservice.setPersonRepository(personRepository);
 		urlservice.setMedicalRecordRepository(medicalRecordRepository);
 
-		childInHouseAlertDTO childHouse = new childInHouseAlertDTO("Sophie", "Lecomte", "6");
-		ArrayList<childInHouseAlertDTO> childenInHouse = new ArrayList<>();
+		ChildInHouseAlertDTO childHouse = new ChildInHouseAlertDTO("Sophie", "Lecomte", "6");
+		ArrayList<ChildInHouseAlertDTO> childenInHouse = new ArrayList<>();
 		childenInHouse.add(childHouse);
 		ArrayList<Person> adultInHouse = new ArrayList<>();
 
-		childAlertDTO expected = new childAlertDTO(childenInHouse, adultInHouse);
-		childAlertDTO actual = urlservice.getListOfChildBasedOnAddress("78 bis avenue de la lumière");
+		ChildAlertDTO expected = new ChildAlertDTO(childenInHouse, adultInHouse);
+		ChildAlertDTO actual = urlservice.getListOfChildBasedOnAddress("78 bis avenue de la lumière");
 		assertEquals(expected, actual);
 
 	}
@@ -133,14 +133,14 @@ class URLServiceTest {
 		urlservice.setFireStationRepository(fireStationRepository);
 		urlservice.setPersonRepository(personRepository);
 
-		phoneAlertDTO phoneAlerta = new phoneAlertDTO("888-888-888");
-		phoneAlertDTO phoneAlertb = new phoneAlertDTO("765-888-888");
+		PhoneAlertDTO phoneAlerta = new PhoneAlertDTO("888-888-888");
+		PhoneAlertDTO phoneAlertb = new PhoneAlertDTO("765-888-888");
 
-		ArrayList<phoneAlertDTO> expected = new ArrayList<>();
+		ArrayList<PhoneAlertDTO> expected = new ArrayList<>();
 		expected.add(phoneAlerta);
 		expected.add(phoneAlertb);
 
-		List<phoneAlertDTO> actual = urlservice.getListOfPhoneNumberOfPeopleLivingCloseToTheFireStation("2");
+		List<PhoneAlertDTO> actual = urlservice.getListOfPhoneNumberOfPeopleLivingCloseToTheFireStation("2");
 
 		assertEquals(actual.hashCode(), expected.hashCode());
 
@@ -157,11 +157,11 @@ class URLServiceTest {
 		meds.add("Dolipranne : 200mg");
 		meds.add("Pollen");
 
-		firePersonDTO expectedItem = new firePersonDTO("Christine", "Cain", "765-888-888", "13", meds);
-		List<firePersonDTO> expectedList = new ArrayList<>();
+		FirePersonDTO expectedItem = new FirePersonDTO("Christine", "Cain", "765-888-888", "13", meds);
+		List<FirePersonDTO> expectedList = new ArrayList<>();
 		expectedList.add(expectedItem);
-		fireDTO expected = new fireDTO(expectedList, "2");
-		fireDTO actual = urlservice.getListOfInhabitantAndPhoneNumberOfFireStationCloseBy("Rue général lousin");
+		FireDTO expected = new FireDTO(expectedList, "2");
+		FireDTO actual = urlservice.getListOfInhabitantAndPhoneNumberOfFireStationCloseBy("Rue général lousin");
 
 		assertEquals(expected.hashCode(), actual.hashCode());
 	}
@@ -179,17 +179,17 @@ class URLServiceTest {
 		meds.add("Dolipranne : 200mg");
 		meds.add("Pollen");
 
-		floodDTO itemA = new floodDTO("32 rue du chemin", "Alex", "Osselin", "888-888-888", "25", meds);
-		floodDTO itemB = new floodDTO("78 bis avenue de la lumière", "Sophie", "Lecomte", "888-789-888", "6", meds);
+		FloodDTO itemA = new FloodDTO("32 rue du chemin", "Alex", "Osselin", "888-888-888", "25", meds);
+		FloodDTO itemB = new FloodDTO("78 bis avenue de la lumière", "Sophie", "Lecomte", "888-789-888", "6", meds);
 
-		List<floodDTO> expected = new ArrayList<>();
+		List<FloodDTO> expected = new ArrayList<>();
 		expected.add(itemA);
 		expected.add(itemB);
 
 		List<String> idstation = new ArrayList<>();
 		idstation.add("1");
 
-		List<floodDTO> result = urlservice.getListOfAllAddressProtectedByTheFireStation(idstation);
+		List<FloodDTO> result = urlservice.getListOfAllAddressProtectedByTheFireStation(idstation);
 
 		assertEquals(expected.hashCode(), result.hashCode());
 
@@ -201,18 +201,18 @@ class URLServiceTest {
 		when(personRepository.getAllData()).thenReturn(mockUpPerson);
 		urlservice.setPersonRepository(personRepository);
 
-		communityEmailDTO itemA = new communityEmailDTO("codeurjava@gmail.com");
-		communityEmailDTO itemB = new communityEmailDTO("bernard.arnaud@lvmh.com");
-		communityEmailDTO itemC = new communityEmailDTO("sophie.Lecomte@gmail.com");
-		communityEmailDTO itemD = new communityEmailDTO("cain.cain@gmail.com");
+		CommunityEmailDTO itemA = new CommunityEmailDTO("codeurjava@gmail.com");
+		CommunityEmailDTO itemB = new CommunityEmailDTO("bernard.arnaud@lvmh.com");
+		CommunityEmailDTO itemC = new CommunityEmailDTO("sophie.Lecomte@gmail.com");
+		CommunityEmailDTO itemD = new CommunityEmailDTO("cain.cain@gmail.com");
 
-		List<communityEmailDTO> expected = new ArrayList<>();
+		List<CommunityEmailDTO> expected = new ArrayList<>();
 		expected.add(itemA);
 		expected.add(itemB);
 		expected.add(itemC);
 		expected.add(itemD);
 
-		List<communityEmailDTO> actual = urlservice.getAllEmailFromAllInhabitantOfCity("Paris");
+		List<CommunityEmailDTO> actual = urlservice.getAllEmailFromAllInhabitantOfCity("Paris");
 
 		assertEquals(expected.hashCode(), actual.hashCode());
 	}
@@ -229,18 +229,18 @@ class URLServiceTest {
 		meds.add("Dolipranne : 200mg");
 		meds.add("Pollen");
 
-		personInfoDTO itema = new personInfoDTO("Osselin", "Alex", "32 rue du chemin", "25", "codeurjava@gmail.com",
+		PersonInfoDTO itema = new PersonInfoDTO("Osselin", "Alex", "32 rue du chemin", "25", "codeurjava@gmail.com",
 				meds);
-		personInfoDTO itemb = new personInfoDTO("Arnaud", "Bernard", "1 rue de la paix", "55",
+		PersonInfoDTO itemb = new PersonInfoDTO("Arnaud", "Bernard", "1 rue de la paix", "55",
 				"bernard.arnaud@lvmh.com", meds);
-		personInfoDTO itemc = new personInfoDTO("Lecomte", "Sophie", "78 bis avenue de la lumière", "35",
+		PersonInfoDTO itemc = new PersonInfoDTO("Lecomte", "Sophie", "78 bis avenue de la lumière", "35",
 				"sophie.Lecomte@gmail.com", meds);
-		personInfoDTO itemd = new personInfoDTO("Christine", "Cain", "Rue général lousin", "25", "cain.cain@gmail.com",
+		PersonInfoDTO itemd = new PersonInfoDTO("Christine", "Cain", "Rue général lousin", "25", "cain.cain@gmail.com",
 				meds);
-		List<personInfoDTO> expectedA = new ArrayList<>();
+		List<PersonInfoDTO> expectedA = new ArrayList<>();
 		expectedA.add(itema);
 
-		List<personInfoDTO> result = urlservice.getMedicalInformationOfPeople("Alex", "Osselin");
+		List<PersonInfoDTO> result = urlservice.getMedicalInformationOfPeople("Alex", "Osselin");
 		assertEquals(result.hashCode(), expectedA.hashCode());
 
 	}

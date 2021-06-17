@@ -26,12 +26,12 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safety.savinglives.safetynetapplication.DTO.fireDTO;
-import com.safety.savinglives.safetynetapplication.DTO.firePersonDTO;
-import com.safety.savinglives.safetynetapplication.DTO.fireStationDTO;
-import com.safety.savinglives.safetynetapplication.DTO.fireStationGeneralDTO;
-import com.safety.savinglives.safetynetapplication.DTO.floodDTO;
-import com.safety.savinglives.safetynetapplication.DTO.phoneAlertDTO;
+import com.safety.savinglives.safetynetapplication.DTO.FireDTO;
+import com.safety.savinglives.safetynetapplication.DTO.FirePersonDTO;
+import com.safety.savinglives.safetynetapplication.DTO.FireStationDTO;
+import com.safety.savinglives.safetynetapplication.DTO.FireStationGeneralDTO;
+import com.safety.savinglives.safetynetapplication.DTO.FloodDTO;
+import com.safety.savinglives.safetynetapplication.DTO.PhoneAlertDTO;
 import com.safety.savinglives.safetynetapplication.controller.FireStationController;
 import com.safety.savinglives.safetynetapplication.controller.MedicalRecordsController;
 import com.safety.savinglives.safetynetapplication.controller.PersonController;
@@ -40,13 +40,13 @@ import com.safety.savinglives.safetynetapplication.model.MedicalRecord;
 import com.safety.savinglives.safetynetapplication.model.Person;
 import com.safety.savinglives.safetynetapplication.repository.FireStationRepository;
 import com.safety.savinglives.safetynetapplication.repository.MedicalRecordRepository;
-import com.safety.savinglives.safetynetapplication.service.FireStationService;
-import com.safety.savinglives.safetynetapplication.service.MedicalRecordService;
-import com.safety.savinglives.safetynetapplication.service.URLService;
+import com.safety.savinglives.safetynetapplication.service.FireStationServices;
+import com.safety.savinglives.safetynetapplication.service.MedicalRecordServices;
+import com.safety.savinglives.safetynetapplication.service.URLServices;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class FireStationControllerTest {
+class FireStationControllerTests {
 
 	private MockMvc mockMvc;
 	private MvcResult mvcResult;
@@ -59,13 +59,13 @@ class FireStationControllerTest {
 	private FireStationController firestationcontroller;
 
 	@Mock
-	private FireStationService firestationservice;
+	private FireStationServices firestationservice;
 
 	@Mock
 	private FireStationRepository firestationrecordrepo;
 
 	@Mock
-	private URLService urlService;
+	private URLServices urlService;
 
 	@BeforeEach
 	private void beforeEach() {

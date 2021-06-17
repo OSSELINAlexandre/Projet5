@@ -7,13 +7,13 @@ import com.safety.savinglives.safetynetapplication.repository.DAOFactory;
 import com.safety.savinglives.safetynetapplication.repository.GeneralDataRepository;
 
 @Service
-public class GeneralService {
+public class GeneralServices {
 
 	@Autowired
 	DAOFactory gen;
 	
 	
-	public GeneralService() {
+	public GeneralServices() {
 		super();
 	}
 

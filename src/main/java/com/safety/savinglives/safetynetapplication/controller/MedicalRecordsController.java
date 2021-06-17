@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.safety.savinglives.safetynetapplication.model.MedicalRecord;
 import com.safety.savinglives.safetynetapplication.model.Person;
-import com.safety.savinglives.safetynetapplication.service.MedicalRecordService;
-import com.safety.savinglives.safetynetapplication.service.URLService;
+import com.safety.savinglives.safetynetapplication.service.MedicalRecordServices;
+import com.safety.savinglives.safetynetapplication.service.URLServices;
 
 @RestController
 public class MedicalRecordsController {
@@ -25,15 +25,15 @@ public class MedicalRecordsController {
 	private static final Logger logger = LogManager.getLogger(MedicalRecordsController.class);
 
 	@Autowired
-	MedicalRecordService medicalRecordService;
+	MedicalRecordServices medicalRecordServices;
 	
 	@Autowired
-	URLService urlService;
+	URLServices urlService;
 
 	@GetMapping(value = "/medicalrecords")
 	public ResponseEntity<Iterable<MedicalRecord>> getAllRecords() {
 
-		Iterable<MedicalRecord> result = medicalRecordService.getAllMedicalRecords();
+		Iterable<MedicalRecord> result = medicalRecordServices.getAllMedicalRecords();
 		if (result == null) {
 			logger.error("COULD NOT return a satisfying result for GET /medicalrecords ");
 			return ResponseEntity.notFound().build();
@@ -46,7 +46,7 @@ public class MedicalRecordsController {
 
 	@PostMapping(value = "/medicalrecords")
 	public ResponseEntity<Void> postANewMedicalRecord(@RequestBody MedicalRecord MedRec) {
-		Boolean result = medicalRecordService.saveANewMedicalRecord(MedRec);
+		Boolean result = medicalRecordServices.saveANewMedicalRecord(MedRec);
 
 		if (result) {
 
@@ -66,7 +66,7 @@ public class MedicalRecordsController {
 	public ResponseEntity<Void> createAPerson(@PathVariable("firstName") String firstName,
 			@PathVariable("thelastName") String thelastName) {
 
-		Boolean result = medicalRecordService.deleteAMedicalFile(firstName, thelastName);
+		Boolean result = medicalRecordServices.deleteAMedicalFile(firstName, thelastName);
 
 		if (result) {
 
@@ -86,7 +86,7 @@ public class MedicalRecordsController {
 	@PutMapping(value = "/medicalrecords")
 	public ResponseEntity<Void> updateAPerson(@RequestBody MedicalRecord medRec) {
 
-		MedicalRecord result = medicalRecordService.updateAMedicalFile(medRec);
+		MedicalRecord result = medicalRecordServices.updateAMedicalFile(medRec);
 
 		if (result == null) {
 			logger.error("COULD NOT return a satisfying result for PUT /medicalrecords ");

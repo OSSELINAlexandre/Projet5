@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.safety.savinglives.safetynetapplication.DTO.childAlertDTO;
-import com.safety.savinglives.safetynetapplication.DTO.communityEmailDTO;
-import com.safety.savinglives.safetynetapplication.DTO.personInfoDTO;
+import com.safety.savinglives.safetynetapplication.DTO.ChildAlertDTO;
+import com.safety.savinglives.safetynetapplication.DTO.CommunityEmailDTO;
+import com.safety.savinglives.safetynetapplication.DTO.PersonInfoDTO;
 import com.safety.savinglives.safetynetapplication.model.Person;
-import com.safety.savinglives.safetynetapplication.service.PersonService;
-import com.safety.savinglives.safetynetapplication.service.URLService;
+import com.safety.savinglives.safetynetapplication.service.PersonServices;
+import com.safety.savinglives.safetynetapplication.service.URLServices;
 
 @RestController
 public class PersonController {
@@ -28,15 +28,15 @@ public class PersonController {
 	private static final Logger logger = LogManager.getLogger(PersonController.class);
 
 	@Autowired
-	PersonService personService;
+	PersonServices personServices;
 	
 	@Autowired
-	URLService urlService;
+	URLServices urlService;
 
 	@GetMapping(value = "/person")
 	public ResponseEntity<Iterable<Person>> getAllPerson() {
 
-		Iterable<Person> result = personService.getAllPersons();
+		Iterable<Person> result = personServices.getAllPersons();
 
 		if (result == null) {
 			logger.info("Successfully return a satisfying result for GET /person ");
@@ -50,7 +50,7 @@ public class PersonController {
 	@PostMapping(value = "/person")
 	public ResponseEntity<Void> saveAPerson(@RequestBody Person person) {
 
-		Boolean result = personService.saveANewPerson(person);
+		Boolean result = personServices.saveANewPerson(person);
 
 		if (result) {
 
@@ -68,7 +68,7 @@ public class PersonController {
 	public ResponseEntity<Void> deleteAPerson(@PathVariable("firstName") String firstName,
 			@PathVariable("thelastName") String thelastName) {
 
-		Boolean result = personService.deleteAPerson(firstName, thelastName);
+		Boolean result = personServices.deleteAPerson(firstName, thelastName);
 
 		if (result) {
 			logger.info("Successfully return a satisfying result for DELETE /person ");
@@ -83,7 +83,7 @@ public class PersonController {
 	@PutMapping(value = "/person")
 	public ResponseEntity<Void> updateAPerson(@RequestBody Person p) {
 
-		Person result = personService.updateAPerson(p);
+		Person result = personServices.updateAPerson(p);
 
 		
 		if (result != null) {
@@ -97,10 +97,10 @@ public class PersonController {
 	}
 	
 	@GetMapping(value = "/childAlert")
-	public ResponseEntity<childAlertDTO> listOfChildLivingInTheAdress(
+	public ResponseEntity<ChildAlertDTO> listOfChildLivingInTheAdress(
 			@RequestParam(name = "address", required = true) String address) throws Throwable {
 
-		childAlertDTO result = urlService.getListOfChildBasedOnAddress(address);
+		ChildAlertDTO result = urlService.getListOfChildBasedOnAddress(address);
 		if (result.getChildInTheHouse().isEmpty()) {
 			logger.error("the Call to GET /childAlert with adress " + address + " returned empty List");
 			return ResponseEntity.ok().body(result);
@@ -116,11 +116,11 @@ public class PersonController {
 	
 	
 	@GetMapping(value = "/personInfo")
-	public ResponseEntity<Iterable<personInfoDTO>> getMedicalInformationOfPeople(
+	public ResponseEntity<Iterable<PersonInfoDTO>> getMedicalInformationOfPeople(
 			@RequestParam(name = "firstName", required = true) String firstName,
 			@RequestParam(name = "lastName", required = true) String lastName) {
 
-		List<personInfoDTO> result = urlService.getMedicalInformationOfPeople(firstName, lastName);
+		List<PersonInfoDTO> result = urlService.getMedicalInformationOfPeople(firstName, lastName);
 
 		if (!result.isEmpty()) {
 			logger.info(
@@ -136,10 +136,10 @@ public class PersonController {
 	}
 	
 	@GetMapping(value = "/communityEmail")
-	public ResponseEntity<Iterable<communityEmailDTO>> getAllEmailFromAllInhabitantOfCity(
+	public ResponseEntity<Iterable<CommunityEmailDTO>> getAllEmailFromAllInhabitantOfCity(
 			@RequestParam(name = "city", required = true) String city) {
 
-		List<communityEmailDTO> result = urlService.getAllEmailFromAllInhabitantOfCity(city);
+		List<CommunityEmailDTO> result = urlService.getAllEmailFromAllInhabitantOfCity(city);
 		logger.info("WUTTTTTTTTTTTTTTTTTTTTTTTT " + city);
 
 		if (!result.isEmpty()) {

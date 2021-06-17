@@ -26,23 +26,23 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safety.savinglives.safetynetapplication.DTO.childAlertDTO;
-import com.safety.savinglives.safetynetapplication.DTO.childInHouseAlertDTO;
-import com.safety.savinglives.safetynetapplication.DTO.communityEmailDTO;
-import com.safety.savinglives.safetynetapplication.DTO.personInfoDTO;
+import com.safety.savinglives.safetynetapplication.DTO.ChildAlertDTO;
+import com.safety.savinglives.safetynetapplication.DTO.ChildInHouseAlertDTO;
+import com.safety.savinglives.safetynetapplication.DTO.CommunityEmailDTO;
+import com.safety.savinglives.safetynetapplication.DTO.PersonInfoDTO;
 import com.safety.savinglives.safetynetapplication.controller.FireStationController;
 import com.safety.savinglives.safetynetapplication.controller.PersonController;
 import com.safety.savinglives.safetynetapplication.model.FireStation;
 import com.safety.savinglives.safetynetapplication.model.Person;
 import com.safety.savinglives.safetynetapplication.repository.FireStationRepository;
 import com.safety.savinglives.safetynetapplication.repository.PersonRepository;
-import com.safety.savinglives.safetynetapplication.service.FireStationService;
-import com.safety.savinglives.safetynetapplication.service.PersonService;
-import com.safety.savinglives.safetynetapplication.service.URLService;
+import com.safety.savinglives.safetynetapplication.service.FireStationServices;
+import com.safety.savinglives.safetynetapplication.service.PersonServices;
+import com.safety.savinglives.safetynetapplication.service.URLServices;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class PersonControllerTest {
+class PersonControllerTests {
 
 	private MockMvc mockMvc;
 	private MvcResult mvcResult;
@@ -55,7 +55,7 @@ class PersonControllerTest {
 	private PersonController personcontroller;
 
 	@Mock
-	private PersonService personservice;
+	private PersonServices personservice;
 
 	@Mock
 	private PersonRepository personrepo;

@@ -10,12 +10,12 @@ import com.safety.savinglives.safetynetapplication.model.Person;
 import com.safety.savinglives.safetynetapplication.repository.PersonRepository;
 
 @Service
-public class PersonService {
+public class PersonServices {
 
 	@Autowired
 	PersonRepository personRepository;
 
-	public PersonService() {
+	public PersonServices() {
 		super();
 	}
 

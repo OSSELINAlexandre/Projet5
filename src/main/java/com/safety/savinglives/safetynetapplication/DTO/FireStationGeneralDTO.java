@@ -2,28 +2,28 @@ package com.safety.savinglives.safetynetapplication.DTO;
 
 import java.util.List;
 
-public class fireStationGeneralDTO {
+public class FireStationGeneralDTO {
 
-	private List<fireStationDTO> coveredCitizens;
+	private List<FireStationDTO> coveredCitizens;
 	private int adultCount;
 	private int childCount;
 
-	public fireStationGeneralDTO() {
+	public FireStationGeneralDTO() {
 		super();
 	}
 
-	public fireStationGeneralDTO(List<fireStationDTO> coveredCitizens, int adultCount, int childCount) {
+	public FireStationGeneralDTO(List<FireStationDTO> coveredCitizens, int adultCount, int childCount) {
 		super();
 		this.coveredCitizens = coveredCitizens;
 		this.adultCount = adultCount;
 		this.childCount = childCount;
 	}
 
-	public List<fireStationDTO> getCoveredCitizens() {
+	public List<FireStationDTO> getCoveredCitizens() {
 		return coveredCitizens;
 	}
 
-	public void setCoveredCitizens(List<fireStationDTO> coveredCitizens) {
+	public void setCoveredCitizens(List<FireStationDTO> coveredCitizens) {
 		this.coveredCitizens = coveredCitizens;
 	}
 
@@ -48,7 +48,7 @@ public class fireStationGeneralDTO {
 
 		int hashCodeFinal = 0;
 
-		for (fireStationDTO list : coveredCitizens) {
+		for (FireStationDTO list : coveredCitizens) {
 
 			hashCodeFinal += list.getLastName().hashCode() + list.getFirstName().hashCode();
 
@@ -61,9 +61,9 @@ public class fireStationGeneralDTO {
 
 	@Override
 	public boolean equals(Object obj) {
-		if(obj instanceof fireStationGeneralDTO) {
+		if(obj instanceof FireStationGeneralDTO) {
 			
-			fireStationGeneralDTO itemCompare = (fireStationGeneralDTO) obj;
+			FireStationGeneralDTO itemCompare = (FireStationGeneralDTO) obj;
 			
 			return (itemCompare.getAdultCount() == this.adultCount) && (itemCompare.getChildCount() == this.getChildCount()) &&(itemCompare.getCoveredCitizens().hashCode() == this.getCoveredCitizens().hashCode());
 			

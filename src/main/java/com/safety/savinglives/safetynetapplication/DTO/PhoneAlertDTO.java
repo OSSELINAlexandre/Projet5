@@ -1,10 +1,10 @@
 package com.safety.savinglives.safetynetapplication.DTO;
 
-public class phoneAlertDTO {
+public class PhoneAlertDTO {
 
 	private String phoneNumber;
 
-	public phoneAlertDTO(String phoneNumber) {
+	public PhoneAlertDTO(String phoneNumber) {
 		super();
 		this.phoneNumber = phoneNumber;
 	}

@@ -11,12 +11,12 @@ import com.safety.savinglives.safetynetapplication.model.Person;
 import com.safety.savinglives.safetynetapplication.repository.FireStationRepository;
 
 @Service
-public class FireStationService {
+public class FireStationServices {
 
 	@Autowired
 	FireStationRepository fireStationRepository;
 
-	public FireStationService() {
+	public FireStationServices() {
 		super();
 	}
 

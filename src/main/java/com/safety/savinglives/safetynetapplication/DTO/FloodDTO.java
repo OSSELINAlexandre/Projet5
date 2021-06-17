@@ -2,7 +2,7 @@ package com.safety.savinglives.safetynetapplication.DTO;
 
 import java.util.List;
 
-public class floodDTO {
+public class FloodDTO {
 
 	private String address;
 	private String name;
@@ -11,7 +11,7 @@ public class floodDTO {
 	private String age;
 	private List<String> medicalRecords;
 
-	public floodDTO(String address, String name, String lastName, String phoneNumber, String age,
+	public FloodDTO(String address, String name, String lastName, String phoneNumber, String age,
 			List<String> medicalRecords) {
 		super();
 		this.address = address;
@@ -22,7 +22,7 @@ public class floodDTO {
 		this.medicalRecords = medicalRecords;
 	}
 
-	public floodDTO() {
+	public FloodDTO() {
 		super();
 	}
 

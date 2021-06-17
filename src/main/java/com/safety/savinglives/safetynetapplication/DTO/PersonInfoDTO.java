@@ -2,25 +2,27 @@ package com.safety.savinglives.safetynetapplication.DTO;
 
 import java.util.List;
 
-public class firePersonDTO {
+public class PersonInfoDTO {
 
-	private String name;
 	private String lastName;
-	private String phoneNumber;
+	private String name;
+	private String address;
 	private String age;
+	private String eMail;
 	private List<String> medRecords;
 
-	public firePersonDTO() {
+	public PersonInfoDTO() {
 		super();
 	}
 
-	public firePersonDTO(String name, String lastName, String phoneNumber, String age, List<String> medRecords) {
+	public PersonInfoDTO(String lastName, String name, String address, String age, String eMail,
+			List<String> medRecords) {
 		super();
-
 		this.name = name;
 		this.lastName = lastName;
-		this.phoneNumber = phoneNumber;
+		this.address = address;
 		this.age = age;
+		this.eMail = eMail;
 		this.medRecords = medRecords;
 	}
 
@@ -40,12 +42,12 @@ public class firePersonDTO {
 		this.lastName = lastName;
 	}
 
-	public String getPhoneNumber() {
-		return phoneNumber;
+	public String getAddress() {
+		return address;
 	}
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	public String getAge() {
@@ -54,6 +56,14 @@ public class firePersonDTO {
 
 	public void setAge(String age) {
 		this.age = age;
+	}
+
+	public String geteMail() {
+		return eMail;
+	}
+
+	public void seteMail(String eMail) {
+		this.eMail = eMail;
 	}
 
 	public List<String> getMedRecords() {
@@ -74,7 +84,8 @@ public class firePersonDTO {
 			finalHash += s.hashCode();
 		}
 
-		return name.hashCode() + lastName.hashCode() + age.hashCode() + phoneNumber.hashCode() + finalHash;
+		return lastName.hashCode() + name.hashCode() + address.hashCode() + age.hashCode() + eMail.hashCode()
+				+ finalHash;
 	}
 
 }

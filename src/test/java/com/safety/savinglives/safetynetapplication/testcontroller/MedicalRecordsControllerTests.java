@@ -39,13 +39,13 @@ import com.safety.savinglives.safetynetapplication.model.MedicalRecord;
 import com.safety.savinglives.safetynetapplication.model.Person;
 import com.safety.savinglives.safetynetapplication.repository.FireStationRepository;
 import com.safety.savinglives.safetynetapplication.repository.MedicalRecordRepository;
-import com.safety.savinglives.safetynetapplication.service.FireStationService;
-import com.safety.savinglives.safetynetapplication.service.MedicalRecordService;
-import com.safety.savinglives.safetynetapplication.service.URLService;
+import com.safety.savinglives.safetynetapplication.service.FireStationServices;
+import com.safety.savinglives.safetynetapplication.service.MedicalRecordServices;
+import com.safety.savinglives.safetynetapplication.service.URLServices;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class MedicalRecordsControllerTest {
+class MedicalRecordsControllerTests {
 
 	private MockMvc mockMvc;
 	private MvcResult mvcResult;
@@ -58,13 +58,13 @@ class MedicalRecordsControllerTest {
 	private MedicalRecordsController medicalrecordcontroller;
 
 	@Mock
-	private MedicalRecordService medicalrecordservice;
+	private MedicalRecordServices medicalrecordservice;
 
 	@Mock
 	private MedicalRecordRepository medicalrecordrepo;
 
 	@Mock
-	private URLService urlService;
+	private URLServices urlService;
 
 	@BeforeEach
 	private void beforeEach() {

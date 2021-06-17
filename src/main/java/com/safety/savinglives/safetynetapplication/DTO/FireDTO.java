@@ -2,22 +2,22 @@ package com.safety.savinglives.safetynetapplication.DTO;
 
 import java.util.List;
 
-public class fireDTO {
+public class FireDTO {
 
-	private List<firePersonDTO> citizenLivingAtTheAddress;
+	private List<FirePersonDTO> citizenLivingAtTheAddress;
 	private String fireStationNumberCoveringThisAddress;
 
-	public fireDTO(List<firePersonDTO> citizenLivingAtTheAdress, String stationNumber) {
+	public FireDTO(List<FirePersonDTO> citizenLivingAtTheAdress, String stationNumber) {
 		super();
 		this.citizenLivingAtTheAddress = citizenLivingAtTheAdress;
 		this.fireStationNumberCoveringThisAddress = stationNumber;
 	}
 
-	public List<firePersonDTO> getCitizenLivingAtTheAddress() {
+	public List<FirePersonDTO> getCitizenLivingAtTheAddress() {
 		return citizenLivingAtTheAddress;
 	}
 
-	public void setCitizenLivingAtTheAddress(List<firePersonDTO> citizenLivingAtTheAddress) {
+	public void setCitizenLivingAtTheAddress(List<FirePersonDTO> citizenLivingAtTheAddress) {
 		this.citizenLivingAtTheAddress = citizenLivingAtTheAddress;
 	}
 
@@ -32,7 +32,7 @@ public class fireDTO {
 	@Override
 	public int hashCode() {
 		int finalHash = 0;
-		for (firePersonDTO s : citizenLivingAtTheAddress) {
+		for (FirePersonDTO s : citizenLivingAtTheAddress) {
 
 			finalHash += s.hashCode();
 

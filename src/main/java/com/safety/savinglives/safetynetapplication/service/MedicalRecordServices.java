@@ -10,12 +10,12 @@ import com.safety.savinglives.safetynetapplication.model.Person;
 import com.safety.savinglives.safetynetapplication.repository.MedicalRecordRepository;
 
 @Service
-public class MedicalRecordService {
+public class MedicalRecordServices {
 
 	@Autowired
 	MedicalRecordRepository medicalRecordRepository;
 
-	public MedicalRecordService() {
+	public MedicalRecordServices() {
 		super();
 	}
 

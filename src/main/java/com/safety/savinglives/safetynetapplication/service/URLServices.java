@@ -13,16 +13,16 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.safety.savinglives.safetynetapplication.DTO.childAlertDTO;
-import com.safety.savinglives.safetynetapplication.DTO.childInHouseAlertDTO;
-import com.safety.savinglives.safetynetapplication.DTO.communityEmailDTO;
-import com.safety.savinglives.safetynetapplication.DTO.fireDTO;
-import com.safety.savinglives.safetynetapplication.DTO.firePersonDTO;
-import com.safety.savinglives.safetynetapplication.DTO.fireStationDTO;
-import com.safety.savinglives.safetynetapplication.DTO.fireStationGeneralDTO;
-import com.safety.savinglives.safetynetapplication.DTO.floodDTO;
-import com.safety.savinglives.safetynetapplication.DTO.personInfoDTO;
-import com.safety.savinglives.safetynetapplication.DTO.phoneAlertDTO;
+import com.safety.savinglives.safetynetapplication.DTO.ChildAlertDTO;
+import com.safety.savinglives.safetynetapplication.DTO.ChildInHouseAlertDTO;
+import com.safety.savinglives.safetynetapplication.DTO.CommunityEmailDTO;
+import com.safety.savinglives.safetynetapplication.DTO.FireDTO;
+import com.safety.savinglives.safetynetapplication.DTO.FirePersonDTO;
+import com.safety.savinglives.safetynetapplication.DTO.FireStationDTO;
+import com.safety.savinglives.safetynetapplication.DTO.FireStationGeneralDTO;
+import com.safety.savinglives.safetynetapplication.DTO.FloodDTO;
+import com.safety.savinglives.safetynetapplication.DTO.PersonInfoDTO;
+import com.safety.savinglives.safetynetapplication.DTO.PhoneAlertDTO;
 import com.safety.savinglives.safetynetapplication.model.FireStation;
 import com.safety.savinglives.safetynetapplication.model.MedicalRecord;
 import com.safety.savinglives.safetynetapplication.model.Person;
@@ -31,9 +31,9 @@ import com.safety.savinglives.safetynetapplication.repository.MedicalRecordRepos
 import com.safety.savinglives.safetynetapplication.repository.PersonRepository;
 
 @Service
-public class URLService {
+public class URLServices {
 
-	private static final Logger logger = LogManager.getLogger(URLService.class);
+	private static final Logger logger = LogManager.getLogger(URLServices.class);
 
 	@Autowired
 	PersonRepository personRepository;
@@ -44,11 +44,11 @@ public class URLService {
 	@Autowired
 	MedicalRecordRepository medicalRecordRepository;
 
-	public URLService() {
+	public URLServices() {
 		super();
 	}
 
-	public fireStationGeneralDTO getListOfPeopleCoveredByFireStation(String id) {
+	public FireStationGeneralDTO getListOfPeopleCoveredByFireStation(String id) {
 
 		ArrayList<String> adressCoveredByStation = new ArrayList<>();
 
@@ -62,7 +62,7 @@ public class URLService {
 
 		}
 
-		ArrayList<fireStationDTO> citizenLivingClose = new ArrayList<>();
+		ArrayList<FireStationDTO> citizenLivingClose = new ArrayList<>();
 
 		for (String s : adressCoveredByStation) {
 
@@ -73,7 +73,7 @@ public class URLService {
 					logger.debug(p.getFirstName() + ", " + p.getLastName()
 							+ " supposed to live in the area of fireStation number  " + id);
 
-					fireStationDTO newItem = new fireStationDTO(p.getFirstName(), p.getLastName(), p.getAddress(),
+					FireStationDTO newItem = new FireStationDTO(p.getFirstName(), p.getLastName(), p.getAddress(),
 							p.getPhone());
 					citizenLivingClose.add(newItem);
 
@@ -82,9 +82,9 @@ public class URLService {
 			}
 		}
 
-		fireStationGeneralDTO result = new fireStationGeneralDTO(citizenLivingClose, 0, 0);
+		FireStationGeneralDTO result = new FireStationGeneralDTO(citizenLivingClose, 0, 0);
 
-		for (fireStationDTO p : citizenLivingClose) {
+		for (FireStationDTO p : citizenLivingClose) {
 
 			for (MedicalRecord medRec : medicalRecordRepository.getAllData()) {
 
@@ -110,11 +110,11 @@ public class URLService {
 
 	}
 
-	public childAlertDTO getListOfChildBasedOnAddress(String adress) {
+	public ChildAlertDTO getListOfChildBasedOnAddress(String adress) {
 		List<Person> livingAtThisAdress = new ArrayList<Person>();
-		List<childInHouseAlertDTO> livingAtThisAdressUnder18 = new ArrayList<childInHouseAlertDTO>();
+		List<ChildInHouseAlertDTO> livingAtThisAdressUnder18 = new ArrayList<ChildInHouseAlertDTO>();
 		List<Person> livingAtThisAdressAbove18 = new ArrayList<Person>();
-		childInHouseAlertDTO newChild = new childInHouseAlertDTO();
+		ChildInHouseAlertDTO newChild = new ChildInHouseAlertDTO();
 		for (Person p : personRepository.getAllData()) {
 			if (p.getAddress().equals(adress)) {
 				livingAtThisAdress.add(p);
@@ -125,7 +125,7 @@ public class URLService {
 			for (Person p : livingAtThisAdress) {
 				if (med.getFirstName().equals(p.getFirstName()) && med.getLastName().equals(p.getLastName())) {
 					if (getTheAge(med.getBirthdate()) <= 18) {
-						newChild = new childInHouseAlertDTO(p.getFirstName(), p.getLastName(),
+						newChild = new ChildInHouseAlertDTO(p.getFirstName(), p.getLastName(),
 								"" + getTheAge(med.getBirthdate()));
 						livingAtThisAdressUnder18.add(newChild);
 						logger.debug(newChild.getFirstName() + ", " + newChild.getLastName()
@@ -138,15 +138,15 @@ public class URLService {
 
 		}
 		
-		childAlertDTO result = new childAlertDTO(livingAtThisAdressUnder18, livingAtThisAdressAbove18);
+		ChildAlertDTO result = new ChildAlertDTO(livingAtThisAdressUnder18, livingAtThisAdressAbove18);
 
 		return result;
 	}
 
-	public List<phoneAlertDTO> getListOfPhoneNumberOfPeopleLivingCloseToTheFireStation(String firestation_number) {
+	public List<PhoneAlertDTO> getListOfPhoneNumberOfPeopleLivingCloseToTheFireStation(String firestation_number) {
 
 		List<String> adressOfFireStation = new ArrayList<>();
-		List<phoneAlertDTO> listOfPhoneNumber = new ArrayList<phoneAlertDTO>();
+		List<PhoneAlertDTO> listOfPhoneNumber = new ArrayList<PhoneAlertDTO>();
 		List<String> alreadyExistingPhone = new ArrayList<String>();
 		for (FireStation fs : fireStationRepository.getAllData()) {
 
@@ -158,10 +158,10 @@ public class URLService {
 		for (Person p : personRepository.getAllData()) {
 			for (String ad : adressOfFireStation) {
 				if (p.getAddress().equals(ad)) {
-					phoneAlertDTO newItem = new phoneAlertDTO(p.getPhone());
+					PhoneAlertDTO newItem = new PhoneAlertDTO(p.getPhone());
 					logger.debug(p.getFirstName() + ", " + p.getLastName() + " phone number is " + p.getPhone());
 
-					for (phoneAlertDTO phone : listOfPhoneNumber) {
+					for (PhoneAlertDTO phone : listOfPhoneNumber) {
 						alreadyExistingPhone.add(phone.getPhoneNumber());
 					}
 
@@ -174,9 +174,9 @@ public class URLService {
 		return listOfPhoneNumber;
 	}
 
-	public fireDTO getListOfInhabitantAndPhoneNumberOfFireStationCloseBy(String address) {
+	public FireDTO getListOfInhabitantAndPhoneNumberOfFireStationCloseBy(String address) {
 
-		List<firePersonDTO> results = new ArrayList<firePersonDTO>();
+		List<FirePersonDTO> results = new ArrayList<FirePersonDTO>();
 
 		for (Person p : personRepository.getAllData()) {
 
@@ -194,7 +194,7 @@ public class URLService {
 						int result = getTheAge(medRec.getBirthdate());
 						;
 
-						firePersonDTO newItem = new firePersonDTO(p.getFirstName(), p.getLastName(), p.getPhone(),
+						FirePersonDTO newItem = new FirePersonDTO(p.getFirstName(), p.getLastName(), p.getPhone(),
 								"" + result, medRecords);
 						results.add(newItem);
 
@@ -219,14 +219,14 @@ public class URLService {
 
 		}
 
-		fireDTO finalResult = new fireDTO(results, resultId);
+		FireDTO finalResult = new FireDTO(results, resultId);
 		return finalResult;
 	}
 
-	public List<floodDTO> getListOfAllAddressProtectedByTheFireStation(List<String> IDStation) {
+	public List<FloodDTO> getListOfAllAddressProtectedByTheFireStation(List<String> IDStation) {
 
 		List<String> adressDeservedByIDStations = new ArrayList<>();
-		List<floodDTO> results = new ArrayList<>();
+		List<FloodDTO> results = new ArrayList<>();
 
 		for (String s : IDStation) {
 
@@ -252,7 +252,7 @@ public class URLService {
 							newItemMedRec.addAll(medRec.getMedications());
 							newItemMedRec.addAll(medRec.getAllergies());
 							int age = getTheAge(medRec.getBirthdate());
-							floodDTO newItem = new floodDTO(p.getAddress(), p.getFirstName(), p.getLastName(),
+							FloodDTO newItem = new FloodDTO(p.getAddress(), p.getFirstName(), p.getLastName(),
 									p.getPhone(), "" + age, newItemMedRec);
 							results.add(newItem);
 
@@ -269,9 +269,9 @@ public class URLService {
 		return results;
 	}
 
-	public List<personInfoDTO> getMedicalInformationOfPeople(String firstName, String lastName) {
+	public List<PersonInfoDTO> getMedicalInformationOfPeople(String firstName, String lastName) {
 
-		List<personInfoDTO> result = new ArrayList<>();
+		List<PersonInfoDTO> result = new ArrayList<>();
 		int indexSwitcher = 0;
 
 		for (Person p : personRepository.getAllData()) {
@@ -287,7 +287,7 @@ public class URLService {
 						List<String> newItemMedicalRecord = new ArrayList<String>();
 						newItemMedicalRecord.addAll(medRec.getMedications());
 						newItemMedicalRecord.addAll(medRec.getAllergies());
-						personInfoDTO newItem = new personInfoDTO(medRec.getLastName(), medRec.getFirstName(),
+						PersonInfoDTO newItem = new PersonInfoDTO(medRec.getLastName(), medRec.getFirstName(),
 								p.getAddress(), "" + ageItem, p.getEmail(), newItemMedicalRecord);
 						result.add(newItem);
 						logger.debug(p.getLastName() + " should be equal to " + lastName + " , member : "
@@ -313,7 +313,7 @@ public class URLService {
 
 		if (indexSwitcher != 0) {
 
-			personInfoDTO oldFirst = result.get(0);
+			PersonInfoDTO oldFirst = result.get(0);
 			result.set(0, result.get(indexSwitcher));
 			result.set(indexSwitcher, oldFirst);
 
@@ -322,18 +322,18 @@ public class URLService {
 		return result;
 	}
 
-	public List<communityEmailDTO> getAllEmailFromAllInhabitantOfCity(String city) {
+	public List<CommunityEmailDTO> getAllEmailFromAllInhabitantOfCity(String city) {
 
-		ArrayList<communityEmailDTO> emailsOfCityInhabitants = new ArrayList<>();
+		ArrayList<CommunityEmailDTO> emailsOfCityInhabitants = new ArrayList<>();
 		Boolean mailIsExisting = false;
 
 		for (Person p : personRepository.getAllData()) {
 
 			if (p.getCity().equals(city)) {
 
-				communityEmailDTO newItem = new communityEmailDTO(p.getEmail());
+				CommunityEmailDTO newItem = new CommunityEmailDTO(p.getEmail());
 
-				for (communityEmailDTO existing : emailsOfCityInhabitants) {
+				for (CommunityEmailDTO existing : emailsOfCityInhabitants) {
 
 					if (existing.getEmail().equals(newItem.getEmail())) {
 
