@@ -2,12 +2,15 @@ package com.safety.savinglives.safetynetapplication.testcontroller;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -16,188 +19,161 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safety.savinglives.safetynetapplication.DTO.childAlertDTO;
 import com.safety.savinglives.safetynetapplication.DTO.childInHouseAlertDTO;
 import com.safety.savinglives.safetynetapplication.DTO.communityEmailDTO;
 import com.safety.savinglives.safetynetapplication.DTO.personInfoDTO;
+import com.safety.savinglives.safetynetapplication.controller.FireStationController;
 import com.safety.savinglives.safetynetapplication.controller.PersonController;
+import com.safety.savinglives.safetynetapplication.model.FireStation;
 import com.safety.savinglives.safetynetapplication.model.Person;
+import com.safety.savinglives.safetynetapplication.repository.FireStationRepository;
+import com.safety.savinglives.safetynetapplication.repository.PersonRepository;
+import com.safety.savinglives.safetynetapplication.service.FireStationService;
+import com.safety.savinglives.safetynetapplication.service.PersonService;
 import com.safety.savinglives.safetynetapplication.service.URLService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 class PersonControllerTest {
 
-	@Autowired
 	private MockMvc mockMvc;
+	private MvcResult mvcResult;
+	private Person testInstance;
 
-	@Mock
-	private URLService urlService;
+	@Autowired
+	private WebApplicationContext webApplicationContext;
 
 	@Autowired
 	private PersonController personcontroller;
 
-	@Test
-	public void testGetPerson() throws Exception {
+	@Mock
+	private PersonService personservice;
 
-		mockMvc.perform(get("/person")).andExpect(status().isOk());
+	@Mock
+	private PersonRepository personrepo;
 
-	}
+	@BeforeEach
+	private void beforeEach() {
 
-	@Test
-	public void testDeleteAPerson_ShouldSend404_WhenWrongIdentification() throws Exception {
-
-		mockMvc.perform(MockMvcRequestBuilders.delete("/person/{firstName}/{thelastName}", "Alex", "Lol"))
-				.andExpect(status().is(404));
-
-	}
-
-	@Test
-	public void testDeleteAPerson_ShouldSend200_WhenGoodIdentification() throws Exception {
-
-		mockMvc.perform(MockMvcRequestBuilders.delete("/person/{firstName}/{thelastName}", "Tessa", "Carman"))
-				.andExpect(status().is(200));
+		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+		testInstance = new Person("Peter", "Duncan", "644 Gershwin Cir", "Culver", "97451", "841-874-6512",
+				"jaboyd@email.com");
 
 	}
 
 	@Test
-	public void testSaveAPerson_Shouldsend200_WhenClassisPerson() throws Exception {
+	public void testGet() throws Exception {
 
-		mockMvc.perform(MockMvcRequestBuilders.post("/person")
-				.content(asJsonString(new Person("Alex", "Osselin", "rue sacrécoeur", "Vanves", "98652", "888-88-88-77",
-						"holding@gmail.fr")))
-				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+		mvcResult = mockMvc.perform(get("/person")).andReturn();
 
-	}
-
-	@Test
-	public void testSaveAPerson_Shouldsend400_WhenClassisNotAPerson() throws Exception {
-
-		mockMvc.perform(MockMvcRequestBuilders.post("/person").content(asJsonString("AlexOSSELIN"))
-				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().is(400));
+		assertEquals(200, mvcResult.getResponse().getStatus());
 
 	}
 
 	@Test
-	public void testUpdateAPerson_Shouldsend200_WhenContactExistInJson() throws Exception {
+	public void testDelete() throws Exception {
+		mvcResult = mockMvc.perform(delete("/person/{firstName}/{thelastName}", "Jacob", "Boyd")).andReturn();
 
-		mockMvc.perform(MockMvcRequestBuilders.put("/person")
-				.content(
-						asJsonString(new Person("John", "Boyd", "YES", "YES", "YES", "841-874-6544", "jaboyd@YES.com")))
-				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().is(200));
+		assertEquals(200, mvcResult.getResponse().getStatus());
+	}
+
+	@Test
+	public void testDelete_return404() throws Exception {
+		mvcResult = mockMvc.perform(delete("/person/{firstName}/{thelastName}", "Abraham", "Boyd")).andReturn();
+
+		assertEquals(404, mvcResult.getResponse().getStatus());
+	}
+
+	@Test
+	public void testPost() throws Exception {
+
+		mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/person").content(asJsonString("Bug"))
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andReturn();
+
+		assertEquals(400, mvcResult.getResponse().getStatus());
+	}
+
+	@Test
+	public void testPost_return404() throws Exception {
+		mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/person").content(asJsonString(testInstance))
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andReturn();
+
+		assertEquals(200, mvcResult.getResponse().getStatus());
+	}
+
+	@Test
+	public void testPut() throws Exception {
+
+		testInstance = new Person("Jonanathan", "Marrack", "29 15th St", "Culver", "97451", "841-874-6513",
+				"drk@email.com");
+
+		mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/person").content(asJsonString(testInstance))
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andReturn();
+
+		assertEquals(200, mvcResult.getResponse().getStatus());
 
 	}
 
 	@Test
-	public void testUpdateAPerson_Shouldsend404_WhenContactDoesNotExistInJson() throws Exception {
+	public void testPut_return404() throws Exception {
 
-		mockMvc.perform(MockMvcRequestBuilders.put("/person")
-				.content(asJsonString(new Person("LOL", "LOL", "YES", "YES", "YES", "841-874-6544", "jaboyd@YES.com")))
-				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().is(404));
+		mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/person").content(asJsonString("bug"))
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andReturn();
+
+		assertEquals(400, mvcResult.getResponse().getStatus());
+	}
+
+	@Test
+	public void testChild_Alert() throws Exception {
+
+		mvcResult = mockMvc.perform(get("/childAlert?address={?}", "834 Binoc Ave")).andReturn();
+
+		assertEquals(200, mvcResult.getResponse().getStatus());
+	}
+
+	@Test
+	public void testChild_Alert_return200_IfEmpty() throws Exception {
+
+		mvcResult = mockMvc.perform(get("/childAlert?address={?}", "Light street road")).andReturn();
+
+		assertEquals(200, mvcResult.getResponse().getStatus());
 
 	}
 
 	@Test
-	public void testListOfChildLivingInTheAdress_ShouldReturn200_WhenAdressDoesNotContainChildrenEmptyList() throws Exception {
+	public void testPersonInfo() throws Exception {
+		mvcResult = mockMvc.perform(get("/personInfo?firstName={?}&lastName={?}", "John", "Boyd")).andReturn();
 
-		childAlertDTO testItem = new childAlertDTO(new ArrayList<childInHouseAlertDTO>(), new ArrayList<Person>());
-		when(urlService.getListOfChildBasedOnAddress("32 rue du chemin")).thenReturn(testItem);
-		personcontroller.setUrlService(urlService);
-
-		mockMvc.perform(MockMvcRequestBuilders.get("/childAlert?address={adress}", "32 rue du chemin"))
-				.andExpect(status().isOk());
-
-	}
-	
-
-
-	@Test
-	public void testListOfChildLivingInTheAdress_ShouldReturn200_WhenAdressDoContainChildren() throws Exception {
-
-		childInHouseAlertDTO childHouse = new childInHouseAlertDTO("Sophie", "Lecomte", "6");
-		ArrayList<childInHouseAlertDTO> childenInHouse = new ArrayList<>();
-		childenInHouse.add(childHouse);
-		ArrayList<Person> adultInHouse = new ArrayList<>();
-
-		childAlertDTO testItem = new childAlertDTO(childenInHouse, adultInHouse);
-
-		when(urlService.getListOfChildBasedOnAddress("32 rue du chemin")).thenReturn(testItem);
-		personcontroller.setUrlService(urlService);
-
-		mockMvc.perform(MockMvcRequestBuilders.get("/childAlert?address={adress}", "32 rue du chemin"))
-				.andExpect(status().isOk());
+		assertEquals(200, mvcResult.getResponse().getStatus());
 
 	}
 
 	@Test
-	public void testgetMedicalInformationOfPeople_ShouldReturn404_WhenPersonDoesNotExist() throws Exception {
-
-		List<personInfoDTO> testItem = new ArrayList<>();
-
-		when(urlService.getMedicalInformationOfPeople("Alex", "Osselin")).thenReturn(testItem);
-		personcontroller.setUrlService(urlService);
-
-		mockMvc.perform(MockMvcRequestBuilders.get("/personInfo?firstName={?}&lastName={?}", "Alex", "Osselin"))
-				.andExpect(status().isNotFound());
-	}
-
-	@Test
-	public void testgetMedicalInformationOfPeople_ShouldReturn200_WhenPersonExistInJson() throws Exception {
-
-		List<String> meds = new ArrayList<>();
-		meds.add("Dolipranne : 200mg");
-		meds.add("Pollen");
-
-		personInfoDTO itema = new personInfoDTO("Osselin", "Alex", "32 rue du chemin", "25", "codeurjava@gmail.com",
-				meds);
-		List<personInfoDTO> testItem = new ArrayList<>();
-		testItem.add(itema);
-
-		when(urlService.getMedicalInformationOfPeople("Alex", "Osselin")).thenReturn(testItem);
-		personcontroller.setUrlService(urlService);
-
-		mockMvc.perform(MockMvcRequestBuilders.get("/personInfo?firstName={Jacob}&lastName={Boyd}", "Alex", "Osselin"))
-				.andExpect(status().isOk());
-	}
-
-	@Test
-	public void testGetAllEmailFromAllInhabitantOfCity_ShouldReturn404_WhenCityIsInccorect() throws Exception {
-
-		List<communityEmailDTO> testItem = new ArrayList<>();
-
-		when(urlService.getAllEmailFromAllInhabitantOfCity("Paris")).thenReturn(testItem);
-		personcontroller.setUrlService(urlService);
-
-		mockMvc.perform(MockMvcRequestBuilders.get("/communityEmail?city={city}", "Paris"))
-				.andExpect(status().isNotFound());
+	public void testPersonInfo_return404() throws Exception {
+		mvcResult = mockMvc.perform(get("/personInfo?firstName={?}&lastName={?}", "Lolita", "Loli")).andReturn();
+		assertEquals(404, mvcResult.getResponse().getStatus());
 
 	}
 
 	@Test
-	public void testGetAllEmailFromAllInhabitantOfCity_ShouldReturn200_WhenCityExistInJson() throws Exception {
+	public void testCommunityEmail() throws Exception {
+		mvcResult = mockMvc.perform(get("/communityEmail?city={?}", "Culver")).andReturn();
+		assertEquals(200, mvcResult.getResponse().getStatus());
 
-		communityEmailDTO itemA = new communityEmailDTO("codeurjava@gmail.com");
-		communityEmailDTO itemB = new communityEmailDTO("bernard.arnaud@lvmh.com");
-		communityEmailDTO itemC = new communityEmailDTO("sophie.Lecomte@gmail.com");
-		communityEmailDTO itemD = new communityEmailDTO("cain.cain@gmail.com");
+	}
 
-		List<communityEmailDTO> testItem = new ArrayList<>();
-		testItem.add(itemA);
-		testItem.add(itemB);
-		testItem.add(itemC);
-		testItem.add(itemD);
-
-		when(urlService.getAllEmailFromAllInhabitantOfCity("Paris")).thenReturn(testItem);
-		personcontroller.setUrlService(urlService);
-
-		mockMvc.perform(MockMvcRequestBuilders.get("/communityEmail?city={city}", "Paris")).andExpect(status().isOk());
+	@Test
+	public void testCommunityEmail_return404() throws Exception {
+		mvcResult = mockMvc.perform(get("/communityEmail?city={?}", "Paris")).andReturn();
+		assertEquals(404, mvcResult.getResponse().getStatus());
 
 	}
 

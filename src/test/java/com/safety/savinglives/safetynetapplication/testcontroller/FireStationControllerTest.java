@@ -2,12 +2,15 @@ package com.safety.savinglives.safetynetapplication.testcontroller;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -16,8 +19,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safety.savinglives.safetynetapplication.DTO.fireDTO;
@@ -27,244 +33,182 @@ import com.safety.savinglives.safetynetapplication.DTO.fireStationGeneralDTO;
 import com.safety.savinglives.safetynetapplication.DTO.floodDTO;
 import com.safety.savinglives.safetynetapplication.DTO.phoneAlertDTO;
 import com.safety.savinglives.safetynetapplication.controller.FireStationController;
+import com.safety.savinglives.safetynetapplication.controller.MedicalRecordsController;
 import com.safety.savinglives.safetynetapplication.controller.PersonController;
 import com.safety.savinglives.safetynetapplication.model.FireStation;
 import com.safety.savinglives.safetynetapplication.model.MedicalRecord;
 import com.safety.savinglives.safetynetapplication.model.Person;
 import com.safety.savinglives.safetynetapplication.repository.FireStationRepository;
+import com.safety.savinglives.safetynetapplication.repository.MedicalRecordRepository;
 import com.safety.savinglives.safetynetapplication.service.FireStationService;
+import com.safety.savinglives.safetynetapplication.service.MedicalRecordService;
 import com.safety.savinglives.safetynetapplication.service.URLService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 class FireStationControllerTest {
 
-	@Autowired
 	private MockMvc mockMvc;
+	private MvcResult mvcResult;
+	private FireStation testInstance;
 
-	@Mock
-	private URLService urlService;
-
-	@Mock
-	private FireStationService firestationservice;
+	@Autowired
+	private WebApplicationContext webApplicationContext;
 
 	@Autowired
 	private FireStationController firestationcontroller;
 
 	@Mock
-	private FireStationRepository firestationrepo;
+	private FireStationService firestationservice;
+
+	@Mock
+	private FireStationRepository firestationrecordrepo;
+
+	@Mock
+	private URLService urlService;
+
+	@BeforeEach
+	private void beforeEach() {
+
+		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+
+		testInstance = new FireStation("644 Gershwin Cir", "1");
+
+	}
 
 	@Test
 	public void testdeleteFireStation_Shouldsend404_WhenFireStationDoesNotExists() throws Exception {
 
-		when(firestationservice.deleteANewStation("Light street")).thenReturn(false);
-		firestationcontroller.setFireStationService(firestationservice);
-		mockMvc.perform(MockMvcRequestBuilders.delete("/firestation/{address}", "Light street"))
-				.andExpect(status().isNotFound());
+		mvcResult = mockMvc.perform(delete("/firestation/{address}", "Light Street")).andReturn();
+
+		assertEquals(404, mvcResult.getResponse().getStatus());
 
 	}
 
 	@Test
 	public void testdeleteFireStation_Shouldsend200_WhenFireStationExists() throws Exception {
 
-		when(firestationservice.deleteANewStation("Light street")).thenReturn(true);
-		firestationcontroller.setFireStationService(firestationservice);
+		mvcResult = mockMvc.perform(delete("/firestation/{address}", "748 Townings Dr")).andReturn();
 
-		mockMvc.perform(MockMvcRequestBuilders.delete("/firestation/{address}", "Light street"))
-				.andExpect(status().isOk());
+		assertEquals(200, mvcResult.getResponse().getStatus());
 
 	}
 
 	@Test
 	public void testpostANewFireStation_ShouldSend400_ifIsNotOfClassFireStation() throws Exception {
 
-		mockMvc.perform(MockMvcRequestBuilders.post("/firestation").content(asJsonString("Alex"))
-				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().is(400));
+		mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/firestation").content(asJsonString("Bug"))
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andReturn();
+
+		assertEquals(400, mvcResult.getResponse().getStatus());
+
 	}
 
 	@Test
 	public void testpostANewFireStation_ShouldSend200_ifIsOfClassFireStation() throws Exception {
 
-		FireStation testItem = new FireStation();
+		mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/firestation").content(asJsonString(testInstance))
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andReturn();
 
-		when(firestationservice.saveANewStation(testItem)).thenReturn(true);
-		firestationcontroller.setFireStationService(firestationservice);
-
-		mockMvc.perform(MockMvcRequestBuilders.post("/firestation").content(asJsonString(testItem))
-				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
-	}
-
-	@Test
-	public void testUpdateAFireStation_Shouldsend200_WhenFireStationExistInJson() throws Exception {
-
-		FireStation testResult = new FireStation();
-
-		when(firestationservice.updateAStation("Light street", "1")).thenReturn(testResult);
-		firestationcontroller.setFireStationService(firestationservice);
-
-		mockMvc.perform(MockMvcRequestBuilders.put("/firestation/{address}/{newId}", "Light street", "1"))
-				.andExpect(status().isOk());
+		assertEquals(200, mvcResult.getResponse().getStatus());
 
 	}
 
 	@Test
-	public void testUpdateAFireStation_Shouldsend404_WhenFireStationDoesNotExistInJson() throws Exception {
+	public void testPutAFireStation_Shouldsend200_WhenFireStationExistInJson() throws Exception {
 
-		when(firestationrepo.getAllData()).thenReturn(null);
-		when(firestationservice.updateAStation("Light street", "1")).thenReturn(null);
-		firestationcontroller.setFireStationService(firestationservice);
+		mvcResult = mockMvc.perform(put("/firestation/{address}/{newId}", "1509 Culver St", "7")).andReturn();
 
-		mockMvc.perform(MockMvcRequestBuilders.put("/firestation/{address}/{newId}", "Light street", "1"))
-				.andExpect(status().isNotFound());
+		assertEquals(200, mvcResult.getResponse().getStatus());
 
 	}
 
 	@Test
-	public void testListCoverageByStationNumber_shouldRetrun200_WhenValueExistInJson() throws Exception {
+	public void testPutAFireStation_Shouldsend404_WhenFireStationDoesNotExistInJson() throws Exception {
 
-		fireStationDTO itemA = new fireStationDTO("Alex", "Osselin", "32 rue du chemin", "888-888-888");
-		fireStationDTO itemB = new fireStationDTO("Sophie", "Lecomte", "78 bis avenue de la lumière", "888-789-888");
-		List<fireStationDTO> listing = new ArrayList<fireStationDTO>();
-		listing.add(itemA);
-		listing.add(itemB);
+		mvcResult = mockMvc.perform(put("/firestation/{address}/{newId}", "Light Road Street", "7")).andReturn();
 
-		fireStationGeneralDTO testItem = new fireStationGeneralDTO(listing, 1, 1);
+		assertEquals(404, mvcResult.getResponse().getStatus());
+	}
 
-		when(urlService.getListOfPeopleCoveredByFireStation("1")).thenReturn(testItem);
-		firestationcontroller.setUrlService(urlService);
+	@Test
+	public void testGetFireStation_ShouldReturn200_WhenStationExists() throws Exception {
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/firestation?stationNumber={station_number}", "1"))
-				.andExpect(status().isOk());
+		mvcResult = mockMvc.perform(get("/firestation?stationNumber={?}", "1")).andReturn();
+
+		assertEquals(200, mvcResult.getResponse().getStatus());
 
 	}
 
 	@Test
-	public void testListOfListCoverageByStationNumber_shouldRetrun404_WhenValueDoesNotExistInJson() throws Exception {
+	public void testGetFireStation_ShouldReturn404_WhenStationExists() throws Exception {
 
-		List<fireStationDTO> listing = new ArrayList<fireStationDTO>();
+		mvcResult = mockMvc.perform(get("/firestation?stationNumber={?}", "77")).andReturn();
 
-		fireStationGeneralDTO testItem = new fireStationGeneralDTO(listing, 0, 0);
-
-		when(urlService.getListOfPeopleCoveredByFireStation("1")).thenReturn(testItem);
-		firestationcontroller.setUrlService(urlService);
-
-		mockMvc.perform(MockMvcRequestBuilders.get("/firestation?stationNumber={station_number}", "1"))
-				.andExpect(status().isNotFound());
+		assertEquals(404, mvcResult.getResponse().getStatus());
 
 	}
 
 	@Test
-	public void testGetTheListOfPhoneNumberOfPeopleLivingCloseToTheFireStation_ShouldReturn404_WhenFireStationDoesNotExist()
-			throws Exception {
+	public void testListCoverageByStationNumber_shouldRetrun404_WhenValueDoesNotExistInJson() throws Exception {
 
-		ArrayList<phoneAlertDTO> testItem = new ArrayList<>();
-		when(urlService.getListOfPhoneNumberOfPeopleLivingCloseToTheFireStation("2")).thenReturn(testItem);
-		firestationcontroller.setUrlService(urlService);
+		mvcResult = mockMvc.perform(put("/firestation/{address}/{newId}", "Light Road Street", "7")).andReturn();
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/phoneAlert?firestation={firestation}", "2"))
-				.andExpect(status().isNotFound());
+		assertEquals(404, mvcResult.getResponse().getStatus());
 
 	}
 
 	@Test
-	public void testGetTheListOfPhoneNumberOfPeopleLivingCloseToTheFireStation_ShouldReturn200_WhenFireStationExist()
-			throws Exception {
+	public void testPhoneAlert() throws Exception {
 
-		phoneAlertDTO phoneAlerta = new phoneAlertDTO("888-888-888");
-		phoneAlertDTO phoneAlertb = new phoneAlertDTO("765-888-888");
+		mvcResult = mockMvc.perform(get("/phoneAlert?firestation={?}", "1")).andReturn();
 
-		ArrayList<phoneAlertDTO> testItem = new ArrayList<>();
-		testItem.add(phoneAlerta);
-		testItem.add(phoneAlertb);
-
-		when(urlService.getListOfPhoneNumberOfPeopleLivingCloseToTheFireStation("2")).thenReturn(testItem);
-		firestationcontroller.setUrlService(urlService);
-
-		mockMvc.perform(MockMvcRequestBuilders.get("/phoneAlert?firestation={firestation}", "2"))
-				.andExpect(status().isOk());
+		assertEquals(200, mvcResult.getResponse().getStatus());
 
 	}
 
 	@Test
-	public void testGetListOfInhabitantAndPhoneNumberOfFireStationCloseBy_ShouldReturn200_WhenAddressDoesExist()
-			throws Exception {
+	public void testPhoneAlert_return404() throws Exception {
 
-		List<String> meds = new ArrayList<>();
-		meds.add("Dolipranne : 200mg");
-		meds.add("Pollen");
+		mvcResult = mockMvc.perform(get("/phoneAlert?firestation={?}", "77")).andReturn();
 
-		firePersonDTO expectedItem = new firePersonDTO("Christine", "Cain", "765-888-888", "13", meds);
-		List<firePersonDTO> testItemList = new ArrayList<>();
-		testItemList.add(expectedItem);
-		fireDTO testItem = new fireDTO(testItemList, "2");
-
-		when(urlService.getListOfInhabitantAndPhoneNumberOfFireStationCloseBy("rue lumière")).thenReturn(testItem);
-		firestationcontroller.setUrlService(urlService);
-
-		mockMvc.perform(MockMvcRequestBuilders.get("/fire?address={address}", "rue lumière"))
-				.andExpect(status().isOk());
+		assertEquals(404, mvcResult.getResponse().getStatus());
 
 	}
 
 	@Test
-	public void testGetListOfInhabitantAndPhoneNumberOfFireStationCloseBy_ShouldReturn404_WhenAddressOfPersonDoesNOTExist()
-			throws Exception {
-		List<firePersonDTO> testItemList = new ArrayList<>();
-		fireDTO testItem = new fireDTO(testItemList, "");
-		when(urlService.getListOfInhabitantAndPhoneNumberOfFireStationCloseBy("rue lumière")).thenReturn(testItem);
-		firestationcontroller.setUrlService(urlService);
+	public void testFire() throws Exception {
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/fire?address={address}", "rue lumière"))
-				.andExpect(status().isNotFound());
+		mvcResult = mockMvc.perform(get("/fire?address={?}", "834 Binoc Ave")).andReturn();
+
+		assertEquals(200, mvcResult.getResponse().getStatus());
 
 	}
 
 	@Test
-	public void testGetListOfAllAddressProtectedByTheFireStation_ShouldReturn404_WhenListIsIncorrect()
-			throws Exception {
+	public void testFire_return404() throws Exception {
 
-//		List<String> mockPurposes = new ArrayList<>();
-//		mockPurposes.add("a");
-//		mockPurposes.add("b");
-//		mockPurposes.add("c");
+		mvcResult = mockMvc.perform(get("/fire?address={?}", "LIGHT ROAD STREET")).andReturn();
 
-		List<String> idstation = new ArrayList<>();
-		idstation.add("1");
-		idstation.add("2");
-		List<floodDTO> TestItem = new ArrayList<>();
-
-		when(urlService.getListOfAllAddressProtectedByTheFireStation(idstation)).thenReturn(TestItem);
-		firestationcontroller.setUrlService(urlService);
-
-		mockMvc.perform(MockMvcRequestBuilders.get("/flood/stations?stations={stations}", "1,2"))
-				.andExpect(status().isNotFound());
+		assertEquals(404, mvcResult.getResponse().getStatus());
 
 	}
 
 	@Test
-	public void testGetListOfAllAddressProtectedByTheFireStation_ShouldReturn200_WhenListIsCorrect() throws Exception {
+	public void testFlood() throws Exception {
 
-		List<String> meds = new ArrayList<>();
-		meds.add("Dolipranne : 200mg");
-		meds.add("Pollen");
+		mvcResult = mockMvc.perform(get("/flood/stations?stations={?}", "1,2")).andReturn();
 
-		floodDTO itemA = new floodDTO("32 rue du chemin", "Alex", "Osselin", "888-888-888", "25", meds);
-		floodDTO itemB = new floodDTO("78 bis avenue de la lumière", "Sophie", "Lecomte", "888-789-888", "6", meds);
+		assertEquals(200, mvcResult.getResponse().getStatus());
 
-		List<floodDTO> TestItem = new ArrayList<>();
-		TestItem.add(itemA);
-		TestItem.add(itemB);
+	}
 
-		List<String> idstation = new ArrayList<>();
-		idstation.add("1");
-		idstation.add("2");
+	@Test
+	public void testFlood_return404() throws Exception {
 
-		when(urlService.getListOfAllAddressProtectedByTheFireStation(idstation)).thenReturn(TestItem);
-		firestationcontroller.setUrlService(urlService);
+		mvcResult = mockMvc.perform(get("/flood/stations?stations={?}", "99,100")).andReturn();
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/flood/stations?stations={stations}", "1,2"))
-				.andExpect(status().isOk());
+		assertEquals(404, mvcResult.getResponse().getStatus());
 
 	}
 

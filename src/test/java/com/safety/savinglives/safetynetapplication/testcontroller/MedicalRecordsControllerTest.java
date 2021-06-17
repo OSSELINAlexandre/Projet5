@@ -6,12 +6,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -21,7 +26,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safety.savinglives.safetynetapplication.controller.FireStationController;
@@ -39,91 +47,107 @@ import com.safety.savinglives.safetynetapplication.service.URLService;
 @AutoConfigureMockMvc
 class MedicalRecordsControllerTest {
 
-	@Autowired
 	private MockMvc mockMvc;
+	private MvcResult mvcResult;
+	private MedicalRecord testInstance;
 
-	@Mock
-	private URLService urlService;
-
-	@Mock
-	private MedicalRecordService medicalrecordservice;
+	@Autowired
+	private WebApplicationContext webApplicationContext;
 
 	@Autowired
 	private MedicalRecordsController medicalrecordcontroller;
 
 	@Mock
+	private MedicalRecordService medicalrecordservice;
+
+	@Mock
 	private MedicalRecordRepository medicalrecordrepo;
 
-	@Test
-	public void testdeleteMedicalRecord_Shouldsend404_WhenMedcialRecordDoesNotExists() throws Exception {
+	@Mock
+	private URLService urlService;
 
-		when(medicalrecordservice.deleteAMedicalFile("Alex", "Osselin")).thenReturn(false);
+	@BeforeEach
+	private void beforeEach() {
 
-		medicalrecordcontroller.setMedicalRecordService(medicalrecordservice);
+		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 
-		mockMvc.perform(MockMvcRequestBuilders.delete("/medicalrecords/{firstName}/{thelastName}", "Alex", "Osselin"))
-				.andExpect(status().isNotFound());
+		List<String> medications = new ArrayList<>();
+		List<String> allergies = new ArrayList<>();
+		medications.add("pharmacol:5000mg");
+		medications.add("terazine:10mg");
+		medications.add("noznazol:250mg");
 
+		testInstance = new MedicalRecord("Jacob", "Boyd", "03/06/1989", medications, allergies);
 	}
-
-	@Test
-	public void testdeleteMedcialRecord_Shouldsend200_WhenMedcialRecordExists() throws Exception {
-
-		when(medicalrecordservice.deleteAMedicalFile("Alex", "Osselin")).thenReturn(true);
-		medicalrecordcontroller.setMedicalRecordService(medicalrecordservice);
-
-		mockMvc.perform(MockMvcRequestBuilders.delete("/medicalrecords/{firstName}/{thelastName}", "Alex", "Osselin"))
-				.andExpect(status().isOk());
-
-	}
-
-	@Test
-	public void testpostANewMedicalRecord_ShouldSend400_ifIsNOTOfClassMedicalRecord() throws Exception {
-
-		mockMvc.perform(MockMvcRequestBuilders.post("/medicalrecords").content(asJsonString("nogoodform"))
-				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().is(400));
-	}
-
-	@Test
-	public void testpostANewMedicalRecord_ShouldSend200_ifIsOfClassMedicalRecord() throws Exception {
-
-		mockMvc.perform(MockMvcRequestBuilders.post("/medicalrecords").content(asJsonString(new MedicalRecord()))
-				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
-	}
-
-	@Test
-	public void testUpdateAMedicalRecord_Shouldsend200_WhenMedicalRecordExistInJson() throws Exception {
-
-
-		
-		List<String> testList = new ArrayList<>();
-		testList.add("LOL");
-		testList.add("MDR");
-		MedicalRecord testItem = new MedicalRecord("Alexandre", "OSSELIN", "11/06/1995", testList, testList);
-		when(medicalrecordservice.updateAMedicalFile(testItem)).thenReturn(testItem);
-		medicalrecordcontroller.setMedicalRecordService(medicalrecordservice);
-				
-		
-		mockMvc.perform(MockMvcRequestBuilders.put("/medicalrecords").content(asJsonString(testItem))
-				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+	
+	@AfterEach
+	private void tearDown() {
 		
 	}
 
 	@Test
-	public void testUpdateAMedicalRecord_Shouldsend404_WhenMedicalRecordDoesNotExistInJson() throws Exception {
+	public void testDeleteMedicalRecord_shouldSend200_WhenMedicalRecordExist() throws Exception {
 
-		List<String> test = new ArrayList<>();
-		test.add("YES");
-		test.add("YESYES");
-		MedicalRecord testItem = new MedicalRecord("Alexandre", "OSSELIN", "06/11/1995", test, test);
-		when(medicalrecordservice.updateAMedicalFile(testItem)).thenReturn(null);
-		medicalrecordcontroller.setMedicalRecordService(medicalrecordservice);
+		mvcResult = mockMvc.perform(delete("/medicalrecords/{firstName}/{thelastName}", "John", "Boyd")).andReturn();
 
-		mockMvc.perform(MockMvcRequestBuilders.put("/medicalrecords").content(asJsonString(testItem))
-				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isNotFound());
+		assertEquals(200, mvcResult.getResponse().getStatus());
+	}
 
+	@Test
+	public void testDeleteMedicalRecord_shouldSend404_WhenMedicalRecordExist() throws Exception {
+
+		mvcResult = mockMvc.perform(delete("/medicalrecords/{firstName}/{thelastName}", "Abraham", "Lincoln"))
+				.andReturn();
+
+		assertEquals(404, mvcResult.getResponse().getStatus());
+	}
+
+	@Test
+	public void testPostMedicalRecord_ShouldSend200_WhenMedicalRecordExist() throws Exception {
+
+		mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/medicalrecords").content(asJsonString(testInstance))
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andReturn();
+
+		assertEquals(200, mvcResult.getResponse().getStatus());
+	}
+
+	@Test
+	public void testPostMedicalRecord_ShouldSend400_WhenNotClassMedicalRecord() throws Exception {
+
+		mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/medicalrecords").content("lol")
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andReturn();
+
+		assertEquals(400, mvcResult.getResponse().getStatus());
+	}
+
+	@Test
+	public void testPuttMedicalRecord_ShouldSend200_WhenMedicalRecordExists() throws Exception {
+
+		mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/medicalrecords").content(asJsonString(testInstance))
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andReturn();
+
+		assertEquals(200, mvcResult.getResponse().getStatus());
+	}
+
+
+	@Test
+	public void testPuttMedicalRecord_ShouldSend404_WhenMedicalNotExist() throws Exception {
+
+		MedicalRecord secondTest = testInstance;
+		secondTest.setFirstName("Abraham");
+
+		mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/medicalrecords").content(asJsonString(secondTest))
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andReturn();
+
+		assertEquals(404, mvcResult.getResponse().getStatus());
+	}
+
+	@Test
+	public void testGetMedicalRecord() throws Exception {
+
+		mvcResult = mockMvc.perform(get("/medicalrecords")).andReturn();
+
+		assertEquals(200, mvcResult.getResponse().getStatus());
 	}
 
 	public static String asJsonString(final Object obj) {

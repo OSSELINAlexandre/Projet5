@@ -153,13 +153,7 @@ public class PersonController {
 
 	}
 
-	public URLService getUrlService() {
-		return urlService;
-	}
 
-	public void setUrlService(URLService urlService) {
-		this.urlService = urlService;
-	}
 	
 	
 }

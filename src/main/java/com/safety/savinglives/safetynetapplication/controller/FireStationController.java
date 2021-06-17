@@ -159,20 +159,6 @@ public class FireStationController {
 		}
 	}
 
-	public URLService getUrlService() {
-		return urlService;
-	}
 
-	public void setUrlService(URLService urlService) {
-		this.urlService = urlService;
-	}
-
-	public FireStationService getFireStationService() {
-		return fireStationService;
-	}
-
-	public void setFireStationService(FireStationService fireStationService) {
-		this.fireStationService = fireStationService;
-	}
 
 }

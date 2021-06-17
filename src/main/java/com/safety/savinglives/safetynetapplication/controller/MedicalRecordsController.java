@@ -98,21 +98,7 @@ public class MedicalRecordsController {
 		}
 	}
 
-	public URLService getUrlService() {
-		return urlService;
-	}
 
-	public void setUrlService(URLService urlService) {
-		this.urlService = urlService;
-	}
-
-	public MedicalRecordService getMedicalRecordService() {
-		return medicalRecordService;
-	}
-
-	public void setMedicalRecordService(MedicalRecordService medicalRecordService) {
-		this.medicalRecordService = medicalRecordService;
-	}
 	
 	
 
