@@ -1,14 +1,9 @@
 package com.safety.savinglives.safetynetapplication.testservice;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -32,13 +27,13 @@ import com.safety.savinglives.safetynetapplication.model.Person;
 import com.safety.savinglives.safetynetapplication.repository.FireStationRepository;
 import com.safety.savinglives.safetynetapplication.repository.MedicalRecordRepository;
 import com.safety.savinglives.safetynetapplication.repository.PersonRepository;
+import com.safety.savinglives.safetynetapplication.service.FireStationServices;
 import com.safety.savinglives.safetynetapplication.service.MedicalRecordServices;
 import com.safety.savinglives.safetynetapplication.service.PersonServices;
-import com.safety.savinglives.safetynetapplication.service.URLServices;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-class URLServiceTests {
+class URLServicesTests {
 
 	@Mock
 	static FireStationRepository fireStationRepository;
@@ -50,7 +45,19 @@ class URLServiceTests {
 	static PersonRepository personRepository;
 
 	@Autowired
-	URLServices urlservice;
+	FireStationServices fireStationServices;
+
+	@Autowired
+	MedicalRecordServices medicalRecordServices;
+
+	@Autowired
+	PersonServices personServices;
+
+	@Autowired
+	PersonRepository personRepo;
+
+	@Autowired
+	FireStationRepository fsRepository;
 
 	static ArrayList<FireStation> mockUpFireStation = new ArrayList<FireStation>();
 	static ArrayList<Person> mockUpPerson = new ArrayList<Person>();
@@ -88,9 +95,9 @@ class URLServiceTests {
 		when(fireStationRepository.getAllData()).thenReturn(mockUpFireStation);
 		when(medicalRecordRepository.getAllData()).thenReturn(mockUpMedicalRecords);
 		when(personRepository.getAllData()).thenReturn(mockUpPerson);
-		urlservice.setFireStationRepository(fireStationRepository);
-		urlservice.setPersonRepository(personRepository);
-		urlservice.setMedicalRecordRepository(medicalRecordRepository);
+		fireStationServices.setFireStationRepository(fireStationRepository);
+		fireStationServices.setPersonRepository(personRepository);
+		fireStationServices.setMedicalRecordRepository(medicalRecordRepository);
 
 		FireStationDTO itemA = new FireStationDTO("Alex", "Osselin", "32 rue du chemin", "888-888-888");
 		FireStationDTO itemB = new FireStationDTO("Sophie", "Lecomte", "78 bis avenue de la lumière", "888-789-888");
@@ -100,7 +107,7 @@ class URLServiceTests {
 
 		FireStationGeneralDTO expected = new FireStationGeneralDTO(listing, 1, 1);
 
-		FireStationGeneralDTO actual = urlservice.getListOfPeopleCoveredByFireStation("1");
+		FireStationGeneralDTO actual = fireStationServices.getListOfPeopleCoveredByFireStation("1");
 
 		assertEquals(expected, actual);
 
@@ -111,8 +118,8 @@ class URLServiceTests {
 
 		when(medicalRecordRepository.getAllData()).thenReturn(mockUpMedicalRecords);
 		when(personRepository.getAllData()).thenReturn(mockUpPerson);
-		urlservice.setPersonRepository(personRepository);
-		urlservice.setMedicalRecordRepository(medicalRecordRepository);
+		personServices.setPersonRepository(personRepository);
+		personServices.setMedicalRecordRepository(medicalRecordRepository);
 
 		ChildInHouseAlertDTO childHouse = new ChildInHouseAlertDTO("Sophie", "Lecomte", "6");
 		ArrayList<ChildInHouseAlertDTO> childenInHouse = new ArrayList<>();
@@ -120,7 +127,7 @@ class URLServiceTests {
 		ArrayList<Person> adultInHouse = new ArrayList<>();
 
 		ChildAlertDTO expected = new ChildAlertDTO(childenInHouse, adultInHouse);
-		ChildAlertDTO actual = urlservice.getListOfChildBasedOnAddress("78 bis avenue de la lumière");
+		ChildAlertDTO actual = personServices.getListOfChildBasedOnAddress("78 bis avenue de la lumière");
 		assertEquals(expected, actual);
 
 	}
@@ -130,8 +137,8 @@ class URLServiceTests {
 
 		when(fireStationRepository.getAllData()).thenReturn(mockUpFireStation);
 		when(personRepository.getAllData()).thenReturn(mockUpPerson);
-		urlservice.setFireStationRepository(fireStationRepository);
-		urlservice.setPersonRepository(personRepository);
+		fireStationServices.setFireStationRepository(fireStationRepository);
+		fireStationServices.setPersonRepository(personRepository);
 
 		PhoneAlertDTO phoneAlerta = new PhoneAlertDTO("888-888-888");
 		PhoneAlertDTO phoneAlertb = new PhoneAlertDTO("765-888-888");
@@ -140,7 +147,7 @@ class URLServiceTests {
 		expected.add(phoneAlerta);
 		expected.add(phoneAlertb);
 
-		List<PhoneAlertDTO> actual = urlservice.getListOfPhoneNumberOfPeopleLivingCloseToTheFireStation("2");
+		List<PhoneAlertDTO> actual = fireStationServices.getListOfPhoneNumberOfPeopleLivingCloseToTheFireStation("2");
 
 		assertEquals(actual.hashCode(), expected.hashCode());
 
@@ -150,8 +157,8 @@ class URLServiceTests {
 	void testgetListOfInhabitantAndPhoneNumberOfFireStationCloseBy() {
 		when(medicalRecordRepository.getAllData()).thenReturn(mockUpMedicalRecords);
 		when(personRepository.getAllData()).thenReturn(mockUpPerson);
-		urlservice.setPersonRepository(personRepository);
-		urlservice.setMedicalRecordRepository(medicalRecordRepository);
+		fireStationServices.setPersonRepository(personRepository);
+		fireStationServices.setMedicalRecordRepository(medicalRecordRepository);
 
 		List<String> meds = new ArrayList<>();
 		meds.add("Dolipranne : 200mg");
@@ -161,7 +168,8 @@ class URLServiceTests {
 		List<FirePersonDTO> expectedList = new ArrayList<>();
 		expectedList.add(expectedItem);
 		FireDTO expected = new FireDTO(expectedList, "2");
-		FireDTO actual = urlservice.getListOfInhabitantAndPhoneNumberOfFireStationCloseBy("Rue général lousin");
+		FireDTO actual = fireStationServices
+				.getListOfInhabitantAndPhoneNumberOfFireStationCloseBy("Rue général lousin");
 
 		assertEquals(expected.hashCode(), actual.hashCode());
 	}
@@ -171,9 +179,9 @@ class URLServiceTests {
 		when(fireStationRepository.getAllData()).thenReturn(mockUpFireStation);
 		when(medicalRecordRepository.getAllData()).thenReturn(mockUpMedicalRecords);
 		when(personRepository.getAllData()).thenReturn(mockUpPerson);
-		urlservice.setFireStationRepository(fireStationRepository);
-		urlservice.setPersonRepository(personRepository);
-		urlservice.setMedicalRecordRepository(medicalRecordRepository);
+		fireStationServices.setFireStationRepository(fireStationRepository);
+		fireStationServices.setPersonRepository(personRepository);
+		fireStationServices.setMedicalRecordRepository(medicalRecordRepository);
 
 		List<String> meds = new ArrayList<>();
 		meds.add("Dolipranne : 200mg");
@@ -189,7 +197,7 @@ class URLServiceTests {
 		List<String> idstation = new ArrayList<>();
 		idstation.add("1");
 
-		List<FloodDTO> result = urlservice.getListOfAllAddressProtectedByTheFireStation(idstation);
+		List<FloodDTO> result = fireStationServices.getListOfAllAddressProtectedByTheFireStation(idstation);
 
 		assertEquals(expected.hashCode(), result.hashCode());
 
@@ -199,7 +207,7 @@ class URLServiceTests {
 	void testgetAllEmailFromAllInhabitantOfCity() {
 
 		when(personRepository.getAllData()).thenReturn(mockUpPerson);
-		urlservice.setPersonRepository(personRepository);
+		personServices.setPersonRepository(personRepository);
 
 		CommunityEmailDTO itemA = new CommunityEmailDTO("codeurjava@gmail.com");
 		CommunityEmailDTO itemB = new CommunityEmailDTO("bernard.arnaud@lvmh.com");
@@ -212,7 +220,7 @@ class URLServiceTests {
 		expected.add(itemC);
 		expected.add(itemD);
 
-		List<CommunityEmailDTO> actual = urlservice.getAllEmailFromAllInhabitantOfCity("Paris");
+		List<CommunityEmailDTO> actual = personServices.getAllEmailFromAllInhabitantOfCity("Paris");
 
 		assertEquals(expected.hashCode(), actual.hashCode());
 	}
@@ -222,8 +230,8 @@ class URLServiceTests {
 
 		when(medicalRecordRepository.getAllData()).thenReturn(mockUpMedicalRecords);
 		when(personRepository.getAllData()).thenReturn(mockUpPerson);
-		urlservice.setPersonRepository(personRepository);
-		urlservice.setMedicalRecordRepository(medicalRecordRepository);
+		personServices.setPersonRepository(personRepository);
+		personServices.setMedicalRecordRepository(medicalRecordRepository);
 
 		List<String> meds = new ArrayList<>();
 		meds.add("Dolipranne : 200mg");
@@ -231,18 +239,34 @@ class URLServiceTests {
 
 		PersonInfoDTO itema = new PersonInfoDTO("Osselin", "Alex", "32 rue du chemin", "25", "codeurjava@gmail.com",
 				meds);
-		PersonInfoDTO itemb = new PersonInfoDTO("Arnaud", "Bernard", "1 rue de la paix", "55",
-				"bernard.arnaud@lvmh.com", meds);
-		PersonInfoDTO itemc = new PersonInfoDTO("Lecomte", "Sophie", "78 bis avenue de la lumière", "35",
-				"sophie.Lecomte@gmail.com", meds);
-		PersonInfoDTO itemd = new PersonInfoDTO("Christine", "Cain", "Rue général lousin", "25", "cain.cain@gmail.com",
-				meds);
 		List<PersonInfoDTO> expectedA = new ArrayList<>();
 		expectedA.add(itema);
 
-		List<PersonInfoDTO> result = urlservice.getMedicalInformationOfPeople("Alex", "Osselin");
+		List<PersonInfoDTO> result = personServices.getMedicalInformationOfPeople("Alex", "Osselin");
 		assertEquals(result.hashCode(), expectedA.hashCode());
 
 	}
 
+	@Test
+	public void testSave_Person() {
+
+		Person aTester = new Person("John", "Lennox", "Irlande", "Cambridge", "77777", "888-888-888",
+				"math@physics.com");
+		personServices.setPersonRepository(personRepo);
+		Boolean actual = personServices.saveANewPerson(aTester);
+
+		assertEquals(true, actual);
+
+	}
+
+	@Test
+	public void testSave_FireStation() {
+
+		FireStation fireStationTester = new FireStation("5", "25698 street road");
+		fireStationServices.setFireStationRepository(fsRepository);
+		Boolean actual = fireStationServices.saveANewStation(fireStationTester);
+
+		assertEquals(true, actual);
+
+	}
 }

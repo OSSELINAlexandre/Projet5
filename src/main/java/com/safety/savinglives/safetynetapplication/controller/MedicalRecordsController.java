@@ -1,6 +1,5 @@
 package com.safety.savinglives.safetynetapplication.controller;
 
-import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safety.savinglives.safetynetapplication.model.MedicalRecord;
-import com.safety.savinglives.safetynetapplication.model.Person;
 import com.safety.savinglives.safetynetapplication.service.MedicalRecordServices;
-import com.safety.savinglives.safetynetapplication.service.URLServices;
 
 @RestController
 public class MedicalRecordsController {
@@ -26,9 +23,6 @@ public class MedicalRecordsController {
 
 	@Autowired
 	MedicalRecordServices medicalRecordServices;
-	
-	@Autowired
-	URLServices urlService;
 
 	@GetMapping(value = "/medicalrecords")
 	public ResponseEntity<Iterable<MedicalRecord>> getAllRecords() {
@@ -98,9 +92,4 @@ public class MedicalRecordsController {
 		}
 	}
 
-
-	
-	
-
-	
 }

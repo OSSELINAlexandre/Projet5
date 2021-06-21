@@ -2,17 +2,20 @@ package com.safety.savinglives.safetynetapplication.repository;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.safety.savinglives.safetynetapplication.model.FireStation;
-import com.safety.savinglives.safetynetapplication.model.MedicalRecord;
 
 @Component
 public class FireStationRepository implements DAOMethods<FireStation> {
 
 	@Autowired
 	private DAOFactory generalDAO;
+
+	private static final Logger logger = LogManager.getLogger(FireStationRepository.class);
 
 	private GeneralDataRepository gen;
 
@@ -53,10 +56,14 @@ public class FireStationRepository implements DAOMethods<FireStation> {
 
 	@Override
 	public Boolean save(FireStation t) {
-		if (gen == null)
+		if (gen == null) {
+
 			Instantiate();
 
+		}
+		logger.info("===========FIRE - Save method called ? | Issue with the test environment");
 		fireStationList.add(t);
+
 		return true;
 	}
 

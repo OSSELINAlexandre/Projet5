@@ -11,8 +11,7 @@ public class GeneralServices {
 
 	@Autowired
 	DAOFactory gen;
-	
-	
+
 	public GeneralServices() {
 		super();
 	}

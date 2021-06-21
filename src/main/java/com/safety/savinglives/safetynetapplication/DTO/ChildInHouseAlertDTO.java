@@ -1,8 +1,6 @@
 package com.safety.savinglives.safetynetapplication.DTO;
 
-import java.util.List;
 
-import com.safety.savinglives.safetynetapplication.model.Person;
 
 public class ChildInHouseAlertDTO {
 

@@ -6,6 +6,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.safety.savinglives.safetynetapplication.model.FireStation;
 import com.safety.savinglives.safetynetapplication.model.MedicalRecord;
 import com.safety.savinglives.safetynetapplication.model.Person;
+import com.safety.savinglives.safetynetapplication.repository.FireStationRepository;
 import com.safety.savinglives.safetynetapplication.service.FireStationServices;
 import com.safety.savinglives.safetynetapplication.service.MedicalRecordServices;
 import com.safety.savinglives.safetynetapplication.service.PersonServices;
@@ -23,6 +26,8 @@ import com.safety.savinglives.safetynetapplication.service.PersonServices;
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class EndpointsServiceTests {
+
+	private static final Logger logger = LogManager.getLogger(EndpointsServiceTests.class);
 
 	@Autowired
 	FireStationServices fireStationServices;
@@ -32,6 +37,9 @@ public class EndpointsServiceTests {
 
 	@Autowired
 	PersonServices personServices;
+
+	@Autowired
+	FireStationRepository fsRepository;
 
 	private MedicalRecord medicalRecordTester;
 	private FireStation fireStationTester;
@@ -80,6 +88,7 @@ public class EndpointsServiceTests {
 	@Test
 	public void testSave_FireStation() {
 
+		fireStationServices.setFireStationRepository(fsRepository);
 		Boolean actual = fireStationServices.saveANewStation(fireStationTester);
 
 		assertEquals(true, actual);
@@ -100,15 +109,6 @@ public class EndpointsServiceTests {
 		FireStation testItem = fireStationServices.updateAStation(fireStationTester.getAddress(), "5");
 
 		assertTrue(testItem == null);
-
-	}
-
-	@Test
-	public void testSave_Person() {
-
-		Boolean actual = personServices.saveANewPerson(personTester);
-
-		assertEquals(true, actual);
 
 	}
 

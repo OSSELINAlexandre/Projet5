@@ -17,14 +17,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safety.savinglives.safetynetapplication.DTO.FireDTO;
-import com.safety.savinglives.safetynetapplication.DTO.FirePersonDTO;
 import com.safety.savinglives.safetynetapplication.DTO.FireStationGeneralDTO;
 import com.safety.savinglives.safetynetapplication.DTO.FloodDTO;
 import com.safety.savinglives.safetynetapplication.DTO.PhoneAlertDTO;
 import com.safety.savinglives.safetynetapplication.model.FireStation;
-import com.safety.savinglives.safetynetapplication.model.Person;
 import com.safety.savinglives.safetynetapplication.service.FireStationServices;
-import com.safety.savinglives.safetynetapplication.service.URLServices;
 
 @RestController
 public class FireStationController {
@@ -33,9 +30,6 @@ public class FireStationController {
 
 	@Autowired
 	FireStationServices fireStationServices;
-
-	@Autowired
-	URLServices urlService;
 
 	@PostMapping(value = "/firestation")
 	public ResponseEntity<Void> saveAFireStation(@RequestBody FireStation caserne) {
@@ -90,7 +84,7 @@ public class FireStationController {
 	@GetMapping(value = "/firestation")
 	public ResponseEntity getTheThing(@RequestParam(name = "stationNumber", required = false) String id) {
 
-		FireStationGeneralDTO result = urlService.getListOfPeopleCoveredByFireStation(id);
+		FireStationGeneralDTO result = fireStationServices.getListOfPeopleCoveredByFireStation(id);
 
 		if (!result.getCoveredCitizens().isEmpty()) {
 
@@ -109,7 +103,7 @@ public class FireStationController {
 	public ResponseEntity<Iterable<PhoneAlertDTO>> getTheListOfPhoneNumberOfPeopleLivingCloseToTheFireStation(
 			@RequestParam(name = "firestation", required = true) String firestation_number) {
 
-		List<PhoneAlertDTO> result = urlService
+		List<PhoneAlertDTO> result = fireStationServices
 				.getListOfPhoneNumberOfPeopleLivingCloseToTheFireStation(firestation_number);
 
 		if (!result.isEmpty()) {
@@ -128,7 +122,7 @@ public class FireStationController {
 	public ResponseEntity<FireDTO> getListOfInhabitantAndPhoneNumberOfFireStationCloseBy(
 			@RequestParam(name = "address", required = true) String address) {
 
-		FireDTO result = urlService.getListOfInhabitantAndPhoneNumberOfFireStationCloseBy(address);
+		FireDTO result = fireStationServices.getListOfInhabitantAndPhoneNumberOfFireStationCloseBy(address);
 
 		if (!result.getCitizenLivingAtTheAddress().isEmpty()) {
 			logger.info("Successfully return a satisfying result with call GET /fire?address={address} with address= "
@@ -145,7 +139,7 @@ public class FireStationController {
 	public ResponseEntity<Iterable<FloodDTO>> getListOfAllAddressProtectedByTheFireStation(
 			@RequestParam(name = "stations", required = true) List<String> IDStation) {
 
-		List<FloodDTO> result = urlService.getListOfAllAddressProtectedByTheFireStation(IDStation);
+		List<FloodDTO> result = fireStationServices.getListOfAllAddressProtectedByTheFireStation(IDStation);
 
 		if (!result.isEmpty()) {
 			logger.info(
@@ -158,7 +152,5 @@ public class FireStationController {
 			return ResponseEntity.notFound().build();
 		}
 	}
-
-
 
 }

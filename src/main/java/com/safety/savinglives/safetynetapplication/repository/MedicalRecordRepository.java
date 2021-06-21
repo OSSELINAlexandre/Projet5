@@ -2,17 +2,22 @@ package com.safety.savinglives.safetynetapplication.repository;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.safety.savinglives.safetynetapplication.model.MedicalRecord;
-import com.safety.savinglives.safetynetapplication.model.Person;
 
 @Component
 public class MedicalRecordRepository implements DAOMethods<MedicalRecord> {
 
 	@Autowired
 	private DAOFactory generalDAO;
+	
+	
+	private static final Logger logger = LogManager.getLogger(MedicalRecordRepository.class);
+
 
 	private GeneralDataRepository gen;
 	private List<MedicalRecord> medicalRecordList;
@@ -52,8 +57,11 @@ public class MedicalRecordRepository implements DAOMethods<MedicalRecord> {
 			Instantiate();
 
 		if (medicalRecordList.add(medRec)) {
+			logger.info("****************MEDµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµ");
+
 			return true;
 		}
+		logger.info("*************************MEDµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµµ");
 
 		return false;
 

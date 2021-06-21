@@ -1,17 +1,14 @@
 package com.safety.savinglives.safetynetapplication.testcontroller;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.ArrayList;
-import java.util.List;
+
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,24 +18,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safety.savinglives.safetynetapplication.DTO.ChildAlertDTO;
-import com.safety.savinglives.safetynetapplication.DTO.ChildInHouseAlertDTO;
-import com.safety.savinglives.safetynetapplication.DTO.CommunityEmailDTO;
-import com.safety.savinglives.safetynetapplication.DTO.PersonInfoDTO;
-import com.safety.savinglives.safetynetapplication.controller.FireStationController;
-import com.safety.savinglives.safetynetapplication.controller.PersonController;
-import com.safety.savinglives.safetynetapplication.model.FireStation;
 import com.safety.savinglives.safetynetapplication.model.Person;
-import com.safety.savinglives.safetynetapplication.repository.FireStationRepository;
 import com.safety.savinglives.safetynetapplication.repository.PersonRepository;
-import com.safety.savinglives.safetynetapplication.service.FireStationServices;
 import com.safety.savinglives.safetynetapplication.service.PersonServices;
-import com.safety.savinglives.safetynetapplication.service.URLServices;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -51,8 +36,6 @@ class PersonControllerTests {
 	@Autowired
 	private WebApplicationContext webApplicationContext;
 
-	@Autowired
-	private PersonController personcontroller;
 
 	@Mock
 	private PersonServices personservice;

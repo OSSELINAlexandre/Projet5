@@ -1,25 +1,14 @@
 package com.safety.savinglives.safetynetapplication.testcontroller;
 
-import static org.hamcrest.CoreMatchers.any;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -30,18 +19,10 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safety.savinglives.safetynetapplication.controller.FireStationController;
-import com.safety.savinglives.safetynetapplication.controller.MedicalRecordsController;
-import com.safety.savinglives.safetynetapplication.model.FireStation;
 import com.safety.savinglives.safetynetapplication.model.MedicalRecord;
-import com.safety.savinglives.safetynetapplication.model.Person;
-import com.safety.savinglives.safetynetapplication.repository.FireStationRepository;
 import com.safety.savinglives.safetynetapplication.repository.MedicalRecordRepository;
-import com.safety.savinglives.safetynetapplication.service.FireStationServices;
 import com.safety.savinglives.safetynetapplication.service.MedicalRecordServices;
-import com.safety.savinglives.safetynetapplication.service.URLServices;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -54,17 +35,13 @@ class MedicalRecordsControllerTests {
 	@Autowired
 	private WebApplicationContext webApplicationContext;
 
-	@Autowired
-	private MedicalRecordsController medicalrecordcontroller;
-
 	@Mock
 	private MedicalRecordServices medicalrecordservice;
 
 	@Mock
 	private MedicalRecordRepository medicalrecordrepo;
 
-	@Mock
-	private URLServices urlService;
+
 
 	@BeforeEach
 	private void beforeEach() {
@@ -79,10 +56,10 @@ class MedicalRecordsControllerTests {
 
 		testInstance = new MedicalRecord("Jacob", "Boyd", "03/06/1989", medications, allergies);
 	}
-	
+
 	@AfterEach
 	private void tearDown() {
-		
+
 	}
 
 	@Test
@@ -128,7 +105,6 @@ class MedicalRecordsControllerTests {
 
 		assertEquals(200, mvcResult.getResponse().getStatus());
 	}
-
 
 	@Test
 	public void testPuttMedicalRecord_ShouldSend404_WhenMedicalNotExist() throws Exception {
